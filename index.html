@@ -1,237 +1,2176 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Hotel BuSan KhacHieu — 3D</title>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>Hotel BuSan KhacHieu 3D</title>
+
 <style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#8eb6c2;font-family:Arial,sans-serif}
-#game{position:fixed;inset:0}
-canvas{display:block}
-#hud{position:fixed;inset:0;pointer-events:none;color:white}
-.top{pointer-events:auto;position:absolute;left:10px;right:10px;top:10px;display:flex;gap:8px;align-items:center;justify-content:space-between}
-.card{background:rgba(18,31,48,.82);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18);border-radius:16px;box-shadow:0 8px 25px #0004}
-.profile{padding:8px 11px;min-width:175px}.profile b{font-size:15px}.profile small{opacity:.78}.xp{height:6px;background:#4b5b70;border-radius:9px;margin-top:6px;overflow:hidden}.xp i{display:block;width:54%;height:100%;background:#59c9ff}
-.stats{display:flex;gap:5px}.stat{padding:9px 10px;font-weight:800;font-size:12px}
-.buttons{position:absolute;right:10px;top:75px;display:flex;flex-direction:column;gap:8px;pointer-events:auto}
-.btn{min-width:58px;min-height:52px;border:0;border-radius:17px;background:rgba(18,31,48,.84);color:#fff;border:1px solid #ffffff30;box-shadow:0 7px 18px #0004;font-weight:800}
-.btn span{display:block;font-size:21px}.btn small{font-size:9px}
-.bottom{position:absolute;left:10px;right:10px;bottom:10px;display:flex;gap:7px;align-items:end;pointer-events:auto}
-.action{flex:1;min-height:54px;border:0;border-radius:16px;background:linear-gradient(#fff,#e8e3d7);color:#203047;font-weight:900;box-shadow:0 7px 16px #0004}.action span{font-size:21px;display:block}
-#hint{position:absolute;left:50%;transform:translateX(-50%);bottom:80px;padding:8px 12px;border-radius:13px;background:#111c2dcc;font-size:11px;opacity:.9}
-#loading{position:fixed;inset:0;display:grid;place-items:center;background:linear-gradient(#79a8bd,#dce7d7);z-index:20;color:#fff;text-align:center}
-.loader{padding:24px 28px;border-radius:20px;background:#16273cdd;box-shadow:0 15px 50px #0005}
-#panel{display:none;position:fixed;inset:0;z-index:30;background:#0b1624aa;backdrop-filter:blur(5px);align-items:end;justify-content:center}
-.sheet{width:min(700px,94%);margin-bottom:12px;padding:18px;border-radius:22px;background:#fff9eb;color:#203047;box-shadow:0 20px 60px #0006}
-.sheet h2{margin:0 0 10px}.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #e8dfce;font-size:13px}.close{width:100%;padding:12px;margin-top:12px;border:0;border-radius:13px;background:#f0b83e;font-weight:900}
-@media(max-width:600px){.profile{min-width:135px}.stats .stat:nth-child(2){display:none}.top{top:7px}.buttons{right:7px;top:72px}.btn{min-width:50px;min-height:48px}.action{font-size:11px}.action span{font-size:18px}#hint{bottom:74px}}
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#8fc4d8;
+}
+
+canvas{
+    display:block;
+}
+
+#game{
+    position:fixed;
+    inset:0;
+}
+
+#loading{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(#83bdd1,#d9eee6);
+}
+
+.loading-box{
+    width:min(420px,85vw);
+    padding:30px;
+    border-radius:28px;
+    background:#24374c;
+    color:white;
+    text-align:center;
+    box-shadow:0 20px 60px #0005;
+}
+
+.loading-icon{
+    font-size:55px;
+    margin-bottom:12px;
+}
+
+.loading-title{
+    font-size:25px;
+    font-weight:800;
+}
+
+.loading-text{
+    margin-top:10px;
+    color:#cbd6e1;
+}
+
+#ui{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:20;
+}
+
+.topbar{
+    position:absolute;
+    top:15px;
+    left:15px;
+    right:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#203348dd;
+    color:white;
+    padding:8px 13px 8px 8px;
+    border-radius:18px;
+    box-shadow:0 5px 20px #0004;
+    pointer-events:auto;
+}
+
+.avatar{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:30px;
+    background:linear-gradient(145deg,#ffd9a8,#ff9c79);
+    border:3px solid white;
+}
+
+.hotel-info b{
+    display:block;
+    font-size:17px;
+}
+
+.level{
+    margin-top:4px;
+    font-size:12px;
+    color:#d7e5ef;
+}
+
+.xp{
+    width:120px;
+    height:6px;
+    background:#ffffff33;
+    border-radius:10px;
+    margin-top:5px;
+    overflow:hidden;
+}
+
+.xp i{
+    display:block;
+    width:55%;
+    height:100%;
+    background:#65d8ff;
+}
+
+.stats{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
+
+.stat{
+    padding:10px 13px;
+    border-radius:16px;
+    background:#203348dd;
+    color:white;
+    font-weight:700;
+    box-shadow:0 5px 20px #0003;
+}
+
+.green{color:#70e37b}
+.purple{color:#db9aff}
+.gold{color:#ffd86a}
+
+.left-buttons,
+.right-buttons{
+    position:absolute;
+    top:105px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.left-buttons{left:14px}
+.right-buttons{right:14px}
+
+.ui-btn{
+    pointer-events:auto;
+    border:0;
+    width:62px;
+    min-height:62px;
+    border-radius:19px;
+    background:#203348e8;
+    color:white;
+    font-weight:700;
+    box-shadow:0 6px 18px #0004;
+    cursor:pointer;
+}
+
+.ui-btn .icon{
+    display:block;
+    font-size:25px;
+    margin-bottom:2px;
+}
+
+.bottom-menu{
+    position:absolute;
+    left:50%;
+    bottom:15px;
+    transform:translateX(-50%);
+    display:flex;
+    gap:8px;
+    padding:8px;
+    background:#203348dd;
+    border-radius:25px;
+    pointer-events:auto;
+    box-shadow:0 8px 25px #0005;
+}
+
+.menu-btn{
+    border:0;
+    min-width:72px;
+    height:68px;
+    border-radius:18px;
+    background:#ffffffee;
+    color:#26384b;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.menu-btn .icon{
+    display:block;
+    font-size:27px;
+    margin-bottom:3px;
+}
+
+#joystick{
+    position:absolute;
+    left:25px;
+    bottom:110px;
+    width:125px;
+    height:125px;
+    border-radius:50%;
+    background:#ffffff22;
+    border:2px solid #ffffff55;
+    pointer-events:auto;
+    touch-action:none;
+}
+
+#stick{
+    position:absolute;
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    left:35px;
+    top:35px;
+    background:#ffffffbb;
+    box-shadow:0 5px 15px #0003;
+}
+
+#hint{
+    position:absolute;
+    bottom:105px;
+    right:20px;
+    color:white;
+    background:#203348bb;
+    padding:10px 14px;
+    border-radius:14px;
+    font-size:13px;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:#07132188;
+    padding:20px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    width:min(430px,94vw);
+    background:#f7fafc;
+    border-radius:25px;
+    padding:22px;
+    box-shadow:0 25px 70px #0007;
+}
+
+.modal-box h2{
+    margin-top:0;
+    color:#203348;
+}
+
+.modal-box input{
+    width:100%;
+    padding:15px;
+    border:2px solid #dce4ea;
+    border-radius:14px;
+    font-size:17px;
+    outline:none;
+}
+
+.modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.modal-actions button{
+    flex:1;
+    border:0;
+    padding:14px;
+    border-radius:14px;
+    font-weight:700;
+}
+
+.cancel{background:#e8edf1}
+.confirm{background:#f3ad35;color:white}
+
+.toast{
+    position:fixed;
+    left:50%;
+    top:90px;
+    transform:translateX(-50%) translateY(-20px);
+    z-index:80;
+    background:#203348ee;
+    color:white;
+    padding:12px 20px;
+    border-radius:16px;
+    opacity:0;
+    transition:.25s;
+    pointer-events:none;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+@media(max-width:700px){
+    .stats{
+        max-width:210px;
+    }
+
+    .stat{
+        padding:8px 10px;
+        font-size:12px;
+    }
+
+    .profile{
+        max-width:185px;
+    }
+
+    .hotel-info b{
+        font-size:14px;
+    }
+
+    .bottom-menu{
+        max-width:96vw;
+        overflow-x:auto;
+    }
+
+    .menu-btn{
+        min-width:62px;
+        height:60px;
+        font-size:11px;
+    }
+
+    #hint{
+        display:none;
+    }
+}
 </style>
 </head>
-<body>
-<div id="game"></div>
-<div id="loading"><div class="loader"><div style="font-size:42px">🏨</div><b>Hotel BuSan KhacHieu 3D</b><div style="margin-top:7px;font-size:12px;opacity:.75">Đang dựng khách sạn...</div></div></div>
 
-<div id="hud">
-  <div class="top">
-    <div class="card profile"><b id="hotelName">Hotel BuSan KhacHieu</b><br><small>Lv. <span id="level">5</span> · Chủ khách sạn</small><div class="xp"><i></i></div></div>
-    <div class="stats">
-      <div class="card stat">💵 <span id="money">12,580</span></div>
-      <div class="card stat">💎 245</div>
-      <div class="card stat">⭐ 4.2</div>
+<body>
+
+<div id="game"></div>
+
+<div id="loading">
+    <div class="loading-box">
+        <div class="loading-icon">🏨</div>
+        <div class="loading-title">Hotel BuSan KhacHieu 3D</div>
+        <div class="loading-text">Đang dựng khách sạn...</div>
     </div>
-  </div>
-  <div class="buttons">
-    <button class="btn" id="mapBtn"><span>🗺️</span><small>Bản đồ</small></button>
-    <button class="btn" id="photoBtn"><span>📷</span><small>Góc nhìn</small></button>
-    <button class="btn" id="renameBtn"><span>✏️</span><small>Đổi tên</small></button>
-  </div>
-  <div id="hint">Kéo để xoay • Vuốt 2 ngón để phóng/thu • Chạm nút để tương tác</div>
-  <div class="bottom">
-    <button class="action" id="hotelBtn"><span>🏨</span>Khách sạn</button>
-    <button class="action" id="roomBtn"><span>🛏️</span>Phòng</button>
-    <button class="action" id="foodBtn"><span>🍽️</span>Nhà hàng</button>
-    <button class="action" id="poolBtn"><span>🏊</span>Hồ bơi</button>
-    <button class="action" id="staffBtn"><span>👨‍🍳</span>Nhân viên</button>
-    <button class="action" id="upgradeBtn"><span>⬆️</span>Nâng cấp</button>
-  </div>
 </div>
 
-<div id="panel"><div class="sheet"><h2 id="ptitle">Hotel BuSan KhacHieu</h2><div id="pbody"></div><button class="close" id="close">Đóng</button></div></div>
+<div id="ui">
+
+    <div class="topbar">
+
+        <div class="profile">
+            <div class="avatar">👩🏻</div>
+
+            <div class="hotel-info">
+                <b id="hotelName">Hotel BuSan KhacHieu</b>
+                <div class="level">Lv. 5 · 320/600 XP</div>
+                <div class="xp"><i></i></div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat green">💵 <span id="money">12,580</span></div>
+            <div class="stat purple">💎 245</div>
+            <div class="stat gold">⭐ 4.8</div>
+        </div>
+
+    </div>
+
+    <div class="left-buttons">
+        <button class="ui-btn" onclick="showToast('Bạn chưa có nhiệm vụ mới!')">
+            <span class="icon">📋</span>
+            Nhiệm vụ
+        </button>
+
+        <button class="ui-btn" onclick="showToast('Bạn nhận được 1 phần quà! 🎁')">
+            <span class="icon">🎁</span>
+            Quà
+        </button>
+
+        <button class="ui-btn" onclick="showToast('VIP Hotel đang hoạt động 👑')">
+            <span class="icon">👑</span>
+            VIP
+        </button>
+    </div>
+
+    <div class="right-buttons">
+        <button class="ui-btn" onclick="resetCamera()">
+            <span class="icon">🎥</span>
+            Camera
+        </button>
+
+        <button class="ui-btn" onclick="showToast('Bản đồ khách sạn đang được mở...')">
+            <span class="icon">🗺️</span>
+            Bản đồ
+        </button>
+
+        <button class="ui-btn" onclick="toggleNight()">
+            <span class="icon">🌙</span>
+            Ngày/Đêm
+        </button>
+    </div>
+
+    <div id="joystick">
+        <div id="stick"></div>
+    </div>
+
+    <div id="hint">
+        🖱️ Kéo để xoay camera · Cuộn để zoom · WASD để đi
+    </div>
+
+    <div class="bottom-menu">
+
+        <button class="menu-btn" onclick="focusHotel()">
+            <span class="icon">🏨</span>
+            Khách sạn
+        </button>
+
+        <button class="menu-btn" onclick="focusRooms()">
+            <span class="icon">🛏️</span>
+            Phòng
+        </button>
+
+        <button class="menu-btn" onclick="focusRestaurant()">
+            <span class="icon">🍽️</span>
+            Nhà hàng
+        </button>
+
+        <button class="menu-btn" onclick="focusPool()">
+            <span class="icon">🏊</span>
+            Hồ bơi
+        </button>
+
+        <button class="menu-btn" onclick="showToast('Nhân viên đang làm việc 👨‍🍳')">
+            <span class="icon">👨🏻</span>
+            Nhân viên
+        </button>
+
+        <button class="menu-btn" onclick="openRename()">
+            <span class="icon">✏️</span>
+            Đổi tên
+        </button>
+
+    </div>
+</div>
+
+<div id="renameModal" class="modal">
+    <div class="modal-box">
+        <h2>🏨 Đổi tên khách sạn</h2>
+
+        <input
+            id="nameInput"
+            maxlength="30"
+            placeholder="Nhập tên khách sạn..."
+        >
+
+        <div class="modal-actions">
+            <button class="cancel" onclick="closeRename()">Hủy</button>
+            <button class="confirm" onclick="renameHotel()">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
+    }
+}
+</script>
 
 <script type="module">
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
-import {OrbitControls} from "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/controls/OrbitControls.js";
 
-const root=document.getElementById("game");
-const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x9fc8d3);
-scene.fog=new THREE.Fog(0x9fc8d3,38,90);
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,180);
-camera.position.set(25,19,28);
+/* =========================================================
+   KHỞI TẠO THREE.JS
+========================================================= */
 
-const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.8));
-renderer.setSize(innerWidth,innerHeight);
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.05;
-root.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
 
-const controls=new OrbitControls(camera,renderer.domElement);
-controls.target.set(0,4,0); controls.enableDamping=true; controls.dampingFactor=.075;
-controls.minDistance=14; controls.maxDistance=55; controls.maxPolarAngle=Math.PI*.47;
-controls.minPolarAngle=.18;
+scene.background = new THREE.Color(0x8fc4d8);
 
-const hemi=new THREE.HemisphereLight(0xdff4ff,0x526044,1.7); scene.add(hemi);
-const sun=new THREE.DirectionalLight(0xffe1a5,4.2);
-sun.position.set(-18,30,15); sun.castShadow=true;
-sun.shadow.mapSize.set(2048,2048);
-sun.shadow.camera.left=-35;sun.shadow.camera.right=35;sun.shadow.camera.top=35;sun.shadow.camera.bottom=-35;
-sun.shadow.bias=-.00025;scene.add(sun);
+scene.fog = new THREE.Fog(
+    0x8fc4d8,
+    70,
+    180
+);
 
-function mat(c,rough=.7,metal=0){return new THREE.MeshStandardMaterial({color:c,roughness:rough,metalness:metal})}
-const white=mat(0xf5efe0,.78), cream=mat(0xdcc9a2), dark=mat(0x5a3a26), glass= new THREE.MeshPhysicalMaterial({color:0x6fc9e5,roughness:.12,metalness:.1,transmission:.12,transparent:true,opacity:.8}), green=mat(0x39714d), gold=mat(0xd8a63d,.3,.5);
+const camera = new THREE.PerspectiveCamera(
+    55,
+    innerWidth / innerHeight,
+    0.1,
+    500
+);
 
-function box(w,h,d,m,x,y,z){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=o.receiveShadow=true;scene.add(o);return o}
-function cyl(r,h,m,x,y,z,seg=24){const o=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,seg),m);o.position.set(x,y,z);o.castShadow=o.receiveShadow=true;scene.add(o);return o}
+camera.position.set(
+    42,
+    38,
+    48
+);
 
-const ground=box(100,.6,100,mat(0x688866),0,-.35,0);
-const plaza=box(54,.22,42,mat(0xc7b99b),0,.05,5);
-const road=box(100,.15,9,mat(0x303b46),0,.15,24);
-for(let x=-42;x<43;x+=7)box(4,.03,.22,mat(0xe9ddad),x,.25,24);
+const renderer = new THREE.WebGLRenderer({
+    antialias:true,
+    powerPreference:"high-performance"
+});
 
-function buildHotel(){
-  box(22,13,12,white,0,6.7,0);
-  box(32,7,9,white,-17,3.8,1);
-  box(30,8,9,white,16,4.2,0);
-  for(const y of [3.2,7.1,11]){box(23,.45,12,gold,0,y,0)}
-  for(const x of [-8,-4,0,4,8]) for(const y of [4.5,8.4,12.1]) box(2.1,2.6,.22,glass,x,y,6.08);
-  for(const x of [-24,-19,-14]) for(const y of [3.5,7]) box(2.1,2.6,.22,glass,x,y,5.58);
-  for(const x of [12,17,22]) for(const y of [4,8]) box(2.1,2.6,.22,glass,x,y,4.58);
-  const canopy=box(9,.55,4.5,dark,0,10.1,6.5);
-  box(6,.6,2.8,gold,0,10.55,6.5);
-  const sign=box(12,3.2,.45,dark,0,10.2,6.9);
-  const glow=new THREE.MeshStandardMaterial({color:0xffc94d,emissive:0xffa52e,emissiveIntensity:2});
-  box(10,2.2,.12,glow,0,10.2,7.16);
-  for(const x of [-6,6]){box(.45,3.4,.45,dark,x,1.7,6.7)}
-  box(7.5,3.2,.5,dark,0,1.7,6.8);
+renderer.setSize(
+    innerWidth,
+    innerHeight
+);
+
+renderer.setPixelRatio(
+    Math.min(devicePixelRatio,2)
+);
+
+renderer.shadowMap.enabled = true;
+
+renderer.shadowMap.type =
+    THREE.PCFSoftShadowMap;
+
+renderer.outputColorSpace =
+    THREE.SRGBColorSpace;
+
+renderer.toneMapping =
+    THREE.ACESFilmicToneMapping;
+
+renderer.toneMappingExposure = 1.1;
+
+document
+    .getElementById("game")
+    .appendChild(renderer.domElement);
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+const controls = new OrbitControls(
+    camera,
+    renderer.domElement
+);
+
+controls.target.set(
+    0,
+    5,
+    0
+);
+
+controls.enableDamping = true;
+controls.dampingFactor = .07;
+
+controls.minDistance = 18;
+controls.maxDistance = 95;
+
+controls.maxPolarAngle =
+    Math.PI * .48;
+
+
+/* =========================================================
+   LIGHT
+========================================================= */
+
+const hemi = new THREE.HemisphereLight(
+    0xbdeaff,
+    0x466044,
+    2.1
+);
+
+scene.add(hemi);
+
+const sun = new THREE.DirectionalLight(
+    0xffe0a5,
+    4
+);
+
+sun.position.set(
+    -35,
+    65,
+    30
+);
+
+sun.castShadow = true;
+
+sun.shadow.mapSize.width = 2048;
+sun.shadow.mapSize.height = 2048;
+
+sun.shadow.camera.left = -80;
+sun.shadow.camera.right = 80;
+sun.shadow.camera.top = 80;
+sun.shadow.camera.bottom = -80;
+
+sun.shadow.bias = -0.0004;
+
+scene.add(sun);
+
+
+/* =========================================================
+   MATERIALS
+========================================================= */
+
+function mat(color, rough=.7){
+    return new THREE.MeshStandardMaterial({
+        color,
+        roughness:rough,
+        metalness:.05
+    });
 }
-buildHotel();
 
-function addRoof(x,z,w,d,y=14.2){const r=new THREE.Mesh(new THREE.BoxGeometry(w,.8,d),mat(0x7d3035));r.position.set(x,y,z);r.rotation.z=.01;r.castShadow=true;scene.add(r)}
-addRoof(0,0,24,13);addRoof(-17,1,33,10,8);addRoof(16,0,31,10,9);
+const grassMat =
+    mat(0x5f9255);
 
-function tree(x,z,s=1){
- const g=new THREE.Group();g.position.set(x,0,z);g.scale.setScalar(s);
- const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.28,.4,3.2,10),mat(0x68442a));trunk.position.y=1.6;trunk.castShadow=true;g.add(trunk);
- for(const [yy,rr] of [[3,.95],[4,1.15],[5,1.0]]){const c=new THREE.Mesh(new THREE.SphereGeometry(rr,16,12),mat(0x3f8753));c.position.set((Math.random()-.5)*.3,yy,(Math.random()-.5)*.3);c.castShadow=true;g.add(c)}
- scene.add(g)
+const roadMat =
+    mat(0x303b45);
+
+const wallMat =
+    mat(0xe9d8bd);
+
+const glassMat =
+    new THREE.MeshPhysicalMaterial({
+        color:0x7fcbe8,
+        roughness:.08,
+        metalness:.15,
+        transparent:true,
+        opacity:.62
+    });
+
+const roofMat =
+    mat(0x6d493c);
+
+const whiteMat =
+    mat(0xf4eee4);
+
+const goldMat =
+    new THREE.MeshStandardMaterial({
+        color:0xffc34e,
+        metalness:.55,
+        roughness:.25
+    });
+
+const waterMat =
+    new THREE.MeshPhysicalMaterial({
+        color:0x00aeea,
+        roughness:.1,
+        metalness:.05,
+        transmission:.15,
+        transparent:true,
+        opacity:.82
+    });
+
+const darkMat =
+    mat(0x273645);
+
+const skinMat =
+    mat(0xffc79b);
+
+const shirtMat =
+    mat(0x5d86c8);
+
+const hairMat =
+    mat(0x38271f);
+
+
+/* =========================================================
+   HELPER
+========================================================= */
+
+function box(
+    x,
+    y,
+    z,
+    px,
+    py,
+    pz,
+    material,
+    cast=true,
+    receive=true
+){
+    const g =
+        new THREE.BoxGeometry(x,y,z);
+
+    const m =
+        new THREE.Mesh(g,material);
+
+    m.position.set(px,py,pz);
+
+    m.castShadow = cast;
+    m.receiveShadow = receive;
+
+    scene.add(m);
+
+    return m;
 }
-for(const p of [[-25,-6,1.3],[-29,9,1.5],[28,9,1.4],[25,-6,1.2],[-9,13,.8],[10,13,.8]])tree(...p);
 
-function palm(x,z,s=1){
- const g=new THREE.Group();g.position.set(x,0,z);g.scale.setScalar(s);
- const t=new THREE.Mesh(new THREE.CylinderGeometry(.18,.3,4.5,10),mat(0x70462a));t.position.y=2.25;t.rotation.z=-.08;t.castShadow=true;g.add(t);
- for(let i=0;i<7;i++){const leaf=new THREE.Mesh(new THREE.BoxGeometry(.22,2.7,.08),mat(0x3b8650));leaf.position.y=4.65;leaf.rotation.z=(i/7)*Math.PI*2;leaf.rotation.x=-.45;leaf.castShadow=true;g.add(leaf)}
- scene.add(g)
-}
-[[-18,8,1],[-13,-6,1.1],[13,-6,1.1],[22,5,.9],[8,10,.7]].forEach(p=>palm(...p));
+function cyl(
+    radius,
+    height,
+    px,
+    py,
+    pz,
+    material
+){
+    const g =
+        new THREE.CylinderGeometry(
+            radius,
+            radius,
+            height,
+            24
+        );
 
-function pool(){
- const base=new THREE.Mesh(new THREE.BoxGeometry(19,.55,11),mat(0xe7d5a5));base.position.set(11,.35,-9);base.castShadow=true;scene.add(base);
- const water=new THREE.Mesh(new THREE.BoxGeometry(17,.18,9),new THREE.MeshPhysicalMaterial({color:0x18b9e0,roughness:.12,metalness:.05,transmission:.2,transparent:true,opacity:.88}));
- water.position.set(11,.7,-9);water.receiveShadow=true;scene.add(water);
- for(const x of [3.5,9,14.5,20]){const s=new THREE.Mesh(new THREE.BoxGeometry(.6,1.3,.6),mat(0xd9c19a));s.position.set(x,1.05,-15);s.castShadow=true;scene.add(s)}
-}
-pool();
+    const m =
+        new THREE.Mesh(g,material);
 
-function fountain(){
- const b=cyl(2.2,.55,cream,-11,.5,-8,32);const w=cyl(1.7,.12,glass,-11,.82,-8,32);
- const jet=new THREE.Mesh(new THREE.CylinderGeometry(.08,.2,2.6,12),new THREE.MeshStandardMaterial({color:0xa9efff,transparent:true,opacity:.72}));
- jet.position.set(-11,2.05,-8);scene.add(jet);
-}
-fountain();
+    m.position.set(px,py,pz);
 
-function car(){
- const g=new THREE.Group();g.position.set(-5,.8,13);
- const body=new THREE.Mesh(new THREE.BoxGeometry(4.5,1.1,2.2),mat(0x18212c,.35,.2));body.castShadow=true;g.add(body);
- const top=new THREE.Mesh(new THREE.BoxGeometry(2.6,.85,1.8),glass);top.position.y=.9;top.castShadow=true;g.add(top);
- for(const x of [-1.5,1.5])for(const z of [-1.12,1.12]){const w=cyl(.42,.25,dark,x,0,z,20);w.rotation.x=Math.PI/2;w.castShadow=true;g.add(w)}
- scene.add(g)
-}
-car();
+    m.castShadow=true;
+    m.receiveShadow=true;
 
-function makeCharacter(x,z,color){
- const g=new THREE.Group();g.position.set(x,0,z);
- const shirt=mat(color), skin=mat(0xf0bd91), pants=mat(0x34455a);
- const body=new THREE.Mesh(new THREE.CapsuleGeometry(.42,1.05,6,10),shirt);body.position.y=1.45;body.castShadow=true;g.add(body);
- const head=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),skin);head.position.y=2.55;head.castShadow=true;g.add(head);
- const leg1=new THREE.Mesh(new THREE.CapsuleGeometry(.13,.72,5,8),pants);leg1.position.set(-.18,.55,0);leg1.castShadow=true;g.add(leg1);
- const leg2=leg1.clone();leg2.position.x=.18;g.add(leg2);
- scene.add(g);return g
-}
-const people=[
- {g:makeCharacter(-3,4,0x4d88d5),a:-3,b:4,s:1.2},
- {g:makeCharacter(4,6,0xe05b68),a:4,b:6,s:.9},
- {g:makeCharacter(16,3,0x48a66c),a:16,b:3,s:1.0},
- {g:makeCharacter(-15,5,0xe6a53e),a:-15,b:5,s:1.15}
-];
-people.forEach((p,i)=>p.g.userData={i,baseX:p.a,baseZ:p.b,t:Math.random()*10});
+    scene.add(m);
 
-function lamp(x,z){
- const pole=cyl(.1,3.1,dark,x,1.55,z,10);
- const light=new THREE.PointLight(0xffd78a,2.2,8);light.position.set(x,3.5,z);scene.add(light);
- const bulb=new THREE.Mesh(new THREE.SphereGeometry(.22,12,8),new THREE.MeshStandardMaterial({color:0xffd87b,emissive:0xff9f30,emissiveIntensity:3}));bulb.position.copy(light.position);scene.add(bulb)
+    return m;
 }
-[[-22,15],[22,14],[-9,14],[9,14],[-15,-1],[23,-2]].forEach(p=>lamp(...p));
 
-const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
-function selectAt(ev){
- const r=renderer.domElement.getBoundingClientRect();
- mouse.x=((ev.clientX-r.left)/r.width)*2-1;mouse.y=-((ev.clientY-r.top)/r.height)*2+1;
- ray.setFromCamera(mouse,camera);
- const hit=ray.intersectObjects(people.flatMap(p=>p.g.children),false)[0];
- if(hit){show("Khách đang đi lại","Nhân vật này đang di chuyển trong khuôn viên Hotel BuSan KhacHieu.")}
-}
-renderer.domElement.addEventListener("pointerdown",selectAt);
 
-function show(title,body){
- document.getElementById("ptitle").textContent=title;document.getElementById("pbody").innerHTML=body;
- document.getElementById("panel").style.display="flex";
+/* =========================================================
+   MẶT ĐẤT
+========================================================= */
+
+box(
+    180,
+    1,
+    180,
+    0,
+    -.5,
+    0,
+    grassMat,
+    false,
+    true
+);
+
+
+/* =========================================================
+   ĐƯỜNG
+========================================================= */
+
+box(
+    180,
+    .15,
+    18,
+    0,
+    .05,
+    40,
+    roadMat,
+    false,
+    true
+);
+
+box(
+    18,
+    .15,
+    180,
+    -55,
+    .06,
+    0,
+    roadMat,
+    false,
+    true
+);
+
+
+/* =========================================================
+   SÂN KHÁCH SẠN
+========================================================= */
+
+box(
+    48,
+    .25,
+    35,
+    0,
+    .12,
+    8,
+    mat(0xd1b99b),
+    false
+);
+
+
+/* =========================================================
+   KHỐI KHÁCH SẠN
+========================================================= */
+
+const hotel = new THREE.Group();
+
+scene.add(hotel);
+
+
+/* Tầng 1 */
+
+const floor1 =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            38,8,22
+        ),
+        wallMat
+    );
+
+floor1.position.y = 4;
+
+floor1.castShadow=true;
+floor1.receiveShadow=true;
+
+hotel.add(floor1);
+
+
+/* Tầng 2 */
+
+const floor2 =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            34,7,20
+        ),
+        whiteMat
+    );
+
+floor2.position.y = 11.5;
+
+floor2.castShadow=true;
+floor2.receiveShadow=true;
+
+hotel.add(floor2);
+
+
+/* Tầng 3 */
+
+const floor3 =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            29,6.5,18
+        ),
+        wallMat
+    );
+
+floor3.position.y = 18.25;
+
+floor3.castShadow=true;
+floor3.receiveShadow=true;
+
+hotel.add(floor3);
+
+
+/* =========================================================
+   CỬA KÍNH
+========================================================= */
+
+for(let x=-14;x<=14;x+=7){
+
+    const door =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                4.4,
+                5.4,
+                .15
+            ),
+            glassMat
+        );
+
+    door.position.set(
+        x,
+        3,
+        -11.1
+    );
+
+    hotel.add(door);
+
+    const frame =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                4.8,
+                .18,
+                .2
+            ),
+            darkMat
+        );
+
+    frame.position.set(
+        x,
+        5.7,
+        -11.2
+    );
+
+    hotel.add(frame);
 }
-document.getElementById("close").onclick=()=>document.getElementById("panel").style.display="none";
-document.getElementById("mapBtn").onclick=()=>show("🗺️ Bản đồ","Bạn đang ở khu nghỉ dưỡng Hotel BuSan KhacHieu. Kéo màn hình để xoay camera và khám phá.");
-document.getElementById("photoBtn").onclick=()=>{controls.target.set(0,4,0);camera.position.set(22,16,24);show("📷 Góc chụp","Đã chuyển sang góc nhìn toàn cảnh mặt tiền khách sạn.");};
-document.getElementById("renameBtn").onclick=()=>{
- const old=document.getElementById("hotelName").textContent;const n=prompt("Tên khách sạn mới:",old);
- if(n&&n.trim()){document.getElementById("hotelName").textContent=n.trim();document.title=n.trim()+" — 3D";show("✏️ Đổi tên",`Tên mới: <b>${n.trim().replace(/[<>&"]/g,"")}</b>`)}
+
+
+/* =========================================================
+   BAN CÔNG
+========================================================= */
+
+for(let x=-12;x<=12;x+=8){
+
+    const balcony =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                6,
+                .35,
+                3
+            ),
+            mat(0xcaa878)
+        );
+
+    balcony.position.set(
+        x,
+        15,
+        -11
+    );
+
+    balcony.castShadow=true;
+
+    hotel.add(balcony);
+
+    for(let p=-2;p<=2;p+=1){
+
+        const rail =
+            new THREE.Mesh(
+                new THREE.CylinderGeometry(
+                    .06,.06,1.4,8
+                ),
+                darkMat
+            );
+
+        rail.position.set(
+            x+p,
+            15.7,
+            -12.2
+        );
+
+        hotel.add(rail);
+    }
+}
+
+
+/* =========================================================
+   MÁI
+========================================================= */
+
+const roof =
+    new THREE.Mesh(
+        new THREE.ConeGeometry(
+            22,
+            6,
+            4
+        ),
+        roofMat
+    );
+
+roof.rotation.y =
+    Math.PI/4;
+
+roof.position.y = 24;
+
+roof.castShadow=true;
+
+hotel.add(roof);
+
+
+/* =========================================================
+   BIỂN HOTEL
+========================================================= */
+
+const sign =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            15,
+            4.8,
+            .5
+        ),
+        goldMat
+    );
+
+sign.position.set(
+    0,
+    8,
+    -12.2
+);
+
+sign.castShadow=true;
+
+hotel.add(sign);
+
+
+/* chữ bằng CanvasTexture */
+
+function createTextTexture(
+    text,
+    size=512
+){
+
+    const canvas =
+        document.createElement("canvas");
+
+    canvas.width=size;
+    canvas.height=180;
+
+    const ctx =
+        canvas.getContext("2d");
+
+    ctx.fillStyle="#5b321f";
+    ctx.fillRect(
+        0,0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.fillStyle="#fff4d4";
+
+    ctx.font=
+        "bold 55px Arial";
+
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+
+    ctx.fillText(
+        text,
+        canvas.width/2,
+        canvas.height/2
+    );
+
+    return new THREE.CanvasTexture(
+        canvas
+    );
+}
+
+const signTexture =
+    createTextTexture(
+        "Hotel BuSan"
+    );
+
+const signMesh =
+    new THREE.Mesh(
+        new THREE.PlaneGeometry(
+            13,
+            4.2
+        ),
+        new THREE.MeshBasicMaterial({
+            map:signTexture
+        })
+    );
+
+signMesh.position.set(
+    0,
+    8,
+    -12.5
+);
+
+hotel.add(signMesh);
+
+
+/* =========================================================
+   CỬA CHÍNH
+========================================================= */
+
+box(
+    7,
+    .3,
+    4,
+    0,
+    .15,
+    -14,
+    mat(0x806b57),
+    false
+);
+
+const entrance =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            6,
+            5,
+            .5
+        ),
+        glassMat
+    );
+
+entrance.position.set(
+    0,
+    2.8,
+    -11.8
+);
+
+hotel.add(entrance);
+
+
+/* =========================================================
+   HỒ BƠI
+========================================================= */
+
+function createPool(){
+
+    box(
+        25,
+        .5,
+        15,
+        29,
+        .3,
+        8,
+        mat(0xc7c7b5),
+        false
+    );
+
+    const water =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                22,
+                .45,
+                12
+            ),
+            waterMat
+        );
+
+    water.position.set(
+        29,
+        .65,
+        8
+    );
+
+    water.receiveShadow=true;
+
+    scene.add(water);
+
+    /* đường viền */
+
+    for(let x=-10;x<=10;x+=5){
+
+        box(
+            .5,
+            .7,
+            .5,
+            29+x,
+            .7,
+            2,
+            whiteMat
+        );
+
+        box(
+            .5,
+            .7,
+            .5,
+            29+x,
+            .7,
+            14,
+            whiteMat
+        );
+    }
+
+    /* ghế nằm */
+
+    for(let i=0;i<5;i++){
+
+        const lounger =
+            new THREE.Group();
+
+        const bed =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    2.5,.2,5
+                ),
+                whiteMat
+            );
+
+        bed.position.y=.8;
+
+        lounger.add(bed);
+
+        lounger.position.set(
+            18+i*5,
+            0,
+            -1
+        );
+
+        scene.add(lounger);
+    }
+}
+
+createPool();
+
+
+/* =========================================================
+   CÂY
+========================================================= */
+
+function createTree(x,z,s=1){
+
+    const tree =
+        new THREE.Group();
+
+    const trunk =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .35*s,
+                .5*s,
+                3*s,
+                10
+            ),
+            mat(0x70472b)
+        );
+
+    trunk.position.y=
+        1.5*s;
+
+    trunk.castShadow=true;
+
+    tree.add(trunk);
+
+    for(let i=0;i<3;i++){
+
+        const leaf =
+            new THREE.Mesh(
+                new THREE.SphereGeometry(
+                    2.1*s,
+                    16,
+                    12
+                ),
+                mat(0x39734b)
+            );
+
+        leaf.position.set(
+            (Math.random()-.5)*1.5*s,
+            (3+i*1.2)*s,
+            (Math.random()-.5)*1.5*s
+        );
+
+        leaf.castShadow=true;
+
+        tree.add(leaf);
+    }
+
+    tree.position.set(
+        x,0,z
+    );
+
+    scene.add(tree);
+}
+
+
+/* nhiều cây */
+
+[
+    [-25,-8,1.2],
+    [-30,15,1],
+    [-24,30,1.4],
+    [42,-15,1.3],
+    [46,28,1.5],
+    [12,34,1],
+    [-45,20,1.2],
+    [50,45,1]
+].forEach(
+    p=>createTree(...p)
+);
+
+
+/* =========================================================
+   ĐÈN SÂN
+========================================================= */
+
+function createLamp(x,z){
+
+    const pole =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .08,.1,3.2,10
+            ),
+            darkMat
+        );
+
+    pole.position.set(
+        x,
+        1.6,
+        z
+    );
+
+    pole.castShadow=true;
+
+    scene.add(pole);
+
+    const bulb =
+        new THREE.Mesh(
+            new THREE.SphereGeometry(
+                .28,
+                16,
+                12
+            ),
+            new THREE.MeshStandardMaterial({
+                color:0xffdf8a,
+                emissive:0xffa500,
+                emissiveIntensity:3
+            })
+        );
+
+    bulb.position.set(
+        x,
+        3.25,
+        z
+    );
+
+    scene.add(bulb);
+
+    const light =
+        new THREE.PointLight(
+            0xffbf66,
+            1.5,
+            12
+        );
+
+    light.position.set(
+        x,
+        3.2,
+        z
+    );
+
+    scene.add(light);
+}
+
+[
+    [-17,-18],
+    [17,-18],
+    [-17,22],
+    [17,22],
+    [18,0],
+    [42,0],
+    [42,20]
+].forEach(
+    p=>createLamp(...p)
+);
+
+
+/* =========================================================
+   NHÂN VẬT
+========================================================= */
+
+function createCharacter(){
+
+    const person =
+        new THREE.Group();
+
+    /* chân */
+
+    const leg1 =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .22,.25,1.7,12
+            ),
+            darkMat
+        );
+
+    leg1.position.set(
+        -.25,
+        .85,
+        0
+    );
+
+    leg1.castShadow=true;
+
+    person.add(leg1);
+
+    const leg2 =
+        leg1.clone();
+
+    leg2.position.x=.25;
+
+    person.add(leg2);
+
+
+    /* thân */
+
+    const body =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .7,.85,1.8,16
+            ),
+            shirtMat
+        );
+
+    body.position.y=2.1;
+
+    body.castShadow=true;
+
+    person.add(body);
+
+
+    /* đầu */
+
+    const head =
+        new THREE.Mesh(
+            new THREE.SphereGeometry(
+                .62,
+                24,
+                18
+            ),
+            skinMat
+        );
+
+    head.position.y=3.65;
+
+    head.castShadow=true;
+
+    person.add(head);
+
+
+    /* tóc */
+
+    const hair =
+        new THREE.Mesh(
+            new THREE.SphereGeometry(
+                .66,
+                24,
+                16,
+                0,
+                Math.PI*2,
+                0,
+                Math.PI*.58
+            ),
+            hairMat
+        );
+
+    hair.position.y=3.9;
+
+    hair.castShadow=true;
+
+    person.add(hair);
+
+
+    /* mắt */
+
+    for(const x of [-.2,.2]){
+
+        const eye =
+            new THREE.Mesh(
+                new THREE.SphereGeometry(
+                    .055,
+                    8,
+                    8
+                ),
+                darkMat
+            );
+
+        eye.position.set(
+            x,
+            3.65,
+            -.59
+        );
+
+        person.add(eye);
+    }
+
+    person.position.set(
+        0,
+        0,
+        4
+    );
+
+    person.scale.set(
+        1.25,
+        1.25,
+        1.25
+    );
+
+    scene.add(person);
+
+    return person;
+}
+
+const player =
+    createCharacter();
+
+
+/* =========================================================
+   KHÁCH ĐI LẠI
+========================================================= */
+
+const guests=[];
+
+function createGuest(x,z){
+
+    const g =
+        createCharacter();
+
+    g.scale.setScalar(.75);
+
+    g.position.set(
+        x,0,z
+    );
+
+    guests.push({
+        object:g,
+        angle:Math.random()*Math.PI*2,
+        speed:.015+Math.random()*.018
+    });
+}
+
+createGuest(-12,5);
+createGuest(8,-2);
+createGuest(20,17);
+createGuest(34,20);
+
+
+/* =========================================================
+   NHÀ HÀNG
+========================================================= */
+
+function createRestaurant(){
+
+    box(
+        18,
+        7,
+        12,
+        -30,
+        3.5,
+        8,
+        mat(0xf1e5d0)
+    );
+
+    box(
+        19,
+        .4,
+        13,
+        -30,
+        7.2,
+        8,
+        roofMat
+    );
+
+    const sign =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                10,2.5,.3
+            ),
+            goldMat
+        );
+
+    sign.position.set(
+        -30,
+        5,
+        1.8
+    );
+
+    scene.add(sign);
+
+    const tex =
+        createTextTexture("RESTAURANT");
+
+    const text =
+        new THREE.Mesh(
+            new THREE.PlaneGeometry(
+                9,
+                2
+            ),
+            new THREE.MeshBasicMaterial({
+                map:tex
+            })
+        );
+
+    text.position.set(
+        -30,
+        5,
+        1.6
+    );
+
+    text.rotation.y=Math.PI;
+
+    scene.add(text);
+}
+
+createRestaurant();
+
+
+/* =========================================================
+   BÀN NGOÀI TRỜI
+========================================================= */
+
+for(let i=0;i<6;i++){
+
+    const table =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                1.1,
+                1.1,
+                .2,
+                20
+            ),
+            whiteMat
+        );
+
+    table.position.set(
+        -30+(i%3)*4,
+        1.5,
+        -2+Math.floor(i/3)*4
+    );
+
+    table.castShadow=true;
+
+    scene.add(table);
+
+    const leg =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .12,.12,1.5,10
+            ),
+            darkMat
+        );
+
+    leg.position.set(
+        table.position.x,
+        .75,
+        table.position.z
+    );
+
+    scene.add(leg);
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+const keys={};
+
+window.addEventListener(
+    "keydown",
+    e=>{
+        keys[e.key.toLowerCase()]=true;
+    }
+);
+
+window.addEventListener(
+    "keyup",
+    e=>{
+        keys[e.key.toLowerCase()]=false;
+    }
+);
+
+
+/* =========================================================
+   JOYSTICK MOBILE
+========================================================= */
+
+const joystick =
+    document.getElementById("joystick");
+
+const stick =
+    document.getElementById("stick");
+
+let joyX=0;
+let joyY=0;
+let joyActive=false;
+
+function joystickMove(e){
+
+    const rect =
+        joystick.getBoundingClientRect();
+
+    const touch =
+        e.touches ? e.touches[0] : e;
+
+    let x =
+        touch.clientX -
+        (rect.left+rect.width/2);
+
+    let y =
+        touch.clientY -
+        (rect.top+rect.height/2);
+
+    const max=35;
+
+    const len =
+        Math.sqrt(x*x+y*y);
+
+    if(len>max){
+
+        x=x/len*max;
+        y=y/len*max;
+    }
+
+    stick.style.transform=
+        `translate(${x}px,${y}px)`;
+
+    joyX=x/max;
+    joyY=y/max;
+}
+
+joystick.addEventListener(
+    "touchstart",
+    e=>{
+        joyActive=true;
+        joystickMove(e);
+    },
+    {passive:true}
+);
+
+joystick.addEventListener(
+    "touchmove",
+    e=>{
+        if(joyActive)
+            joystickMove(e);
+    },
+    {passive:true}
+);
+
+joystick.addEventListener(
+    "touchend",
+    ()=>{
+        joyActive=false;
+        joyX=0;
+        joyY=0;
+        stick.style.transform=
+            "translate(0,0)";
+    }
+);
+
+
+/* =========================================================
+   DI CHUYỂN NHÂN VẬT
+========================================================= */
+
+const clock =
+    new THREE.Clock();
+
+function updatePlayer(){
+
+    let x=0;
+    let z=0;
+
+    if(keys["w"] || keys["arrowup"])
+        z-=1;
+
+    if(keys["s"] || keys["arrowdown"])
+        z+=1;
+
+    if(keys["a"] || keys["arrowleft"])
+        x-=1;
+
+    if(keys["d"] || keys["arrowright"])
+        x+=1;
+
+    x+=joyX;
+    z+=joyY;
+
+    const length =
+        Math.sqrt(x*x+z*z);
+
+    if(length>0){
+
+        x/=length;
+        z/=length;
+
+        const speed=.11;
+
+        player.position.x +=
+            x*speed;
+
+        player.position.z +=
+            z*speed;
+
+        player.rotation.y =
+            Math.atan2(
+                x,
+                z
+            );
+
+        /* giới hạn khu vực */
+
+        player.position.x =
+            THREE.MathUtils.clamp(
+                player.position.x,
+                -42,
+                45
+            );
+
+        player.position.z =
+            THREE.MathUtils.clamp(
+                player.position.z,
+                -25,
+                38
+            );
+    }
+}
+
+
+/* =========================================================
+   KHÁCH ĐI NGẪU NHIÊN
+========================================================= */
+
+function updateGuests(){
+
+    guests.forEach(g=>{
+
+        g.object.position.x +=
+            Math.sin(g.angle)*
+            g.speed;
+
+        g.object.position.z +=
+            Math.cos(g.angle)*
+            g.speed;
+
+        if(
+            Math.abs(g.object.position.x)>45 ||
+            Math.abs(g.object.position.z)>40
+        ){
+            g.angle += Math.PI;
+        }
+
+        g.object.rotation.y =
+            g.angle;
+    });
+}
+
+
+/* =========================================================
+   ĐỔI NGÀY / ĐÊM
+========================================================= */
+
+let night=false;
+
+window.toggleNight=function(){
+
+    night=!night;
+
+    if(night){
+
+        scene.background =
+            new THREE.Color(0x101b35);
+
+        scene.fog.color =
+            new THREE.Color(0x101b35);
+
+        hemi.intensity=.5;
+
+        sun.intensity=.5;
+
+        showToast(
+            "🌙 Chế độ ban đêm"
+        );
+
+    }else{
+
+        scene.background =
+            new THREE.Color(0x8fc4d8);
+
+        scene.fog.color =
+            new THREE.Color(0x8fc4d8);
+
+        hemi.intensity=2.1;
+
+        sun.intensity=4;
+
+        showToast(
+            "☀️ Chế độ ban ngày"
+        );
+    }
 };
-document.getElementById("hotelBtn").onclick=()=>show("🏨 Khách sạn","Bạn đang xem toàn cảnh khách sạn 3D. Xoay camera để khám phá.");
-document.getElementById("roomBtn").onclick=()=>show("🛏️ Phòng","12 phòng đang được mô phỏng trong khu khách sạn. Nội thất có thể mở rộng ở phiên bản tiếp theo.");
-document.getElementById("foodBtn").onclick=()=>show("🍽️ Nhà hàng","Nhà hàng nằm ở tầng trệt, phía bên phải khu sảnh.");
-document.getElementById("poolBtn").onclick=()=>{controls.target.set(11,1,-9);camera.position.set(29,12,-2);show("🏊 Hồ bơi 3D","Hồ bơi có mặt nước, ánh sáng và phản chiếu môi trường cơ bản.");};
-document.getElementById("staffBtn").onclick=()=>show("👨‍🍳 Nhân viên","Nhân viên và khách đang di chuyển trong khuôn viên.");
-document.getElementById("upgradeBtn").onclick=()=>show("⬆️ Nâng cấp","Nâng cấp mặt tiền, phòng, nhà hàng và hồ bơi có thể được nối vào hệ thống kinh tế của game.");
 
-let clock=new THREE.Clock(),paused=false;
-function animate(){
- requestAnimationFrame(animate);
- const t=clock.getElapsedTime();
- people.forEach((p,i)=>{
-   const g=p.g;
-   g.position.x=p.baseX+Math.sin(t*.55+p.t)*2.2;
-   g.position.z=p.baseZ+Math.cos(t*.42+p.t)*1.7;
-   g.rotation.y=Math.sin(t*.55+p.t)*.6;
-   g.position.y=Math.abs(Math.sin(t*3+p.t))*.035;
- });
- controls.update();renderer.render(scene,camera);
+
+/* =========================================================
+   CAMERA PRESET
+========================================================= */
+
+window.resetCamera=function(){
+
+    camera.position.set(
+        42,
+        38,
+        48
+    );
+
+    controls.target.set(
+        0,
+        5,
+        0
+    );
+
+    controls.update();
+};
+
+function cameraTo(x,y,z){
+
+    camera.position.set(
+        x,y,z
+    );
+
+    controls.target.set(
+        0,
+        4,
+        0
+    );
+
+    controls.update();
 }
-window.addEventListener("resize",()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.8))});
-document.getElementById("loading").style.display="none";
+
+window.focusHotel=function(){
+    cameraTo(
+        42,32,46
+    );
+};
+
+window.focusRooms=function(){
+    cameraTo(
+        36,25,30
+    );
+};
+
+window.focusRestaurant=function(){
+    cameraTo(
+        -45,22,30
+    );
+};
+
+window.focusPool=function(){
+    cameraTo(
+        55,25,34
+    );
+};
+
+
+/* =========================================================
+   ĐỔI TÊN KHÁCH SẠN
+========================================================= */
+
+const modal =
+    document.getElementById(
+        "renameModal"
+    );
+
+const nameInput =
+    document.getElementById(
+        "nameInput"
+    );
+
+window.openRename=function(){
+
+    nameInput.value =
+        localStorage.getItem(
+            "hotelName"
+        ) ||
+        "Hotel BuSan KhacHieu";
+
+    modal.classList.add(
+        "active"
+    );
+
+    setTimeout(
+        ()=>nameInput.focus(),
+        100
+    );
+};
+
+window.closeRename=function(){
+
+    modal.classList.remove(
+        "active"
+    );
+};
+
+window.renameHotel=function(){
+
+    let name =
+        nameInput.value.trim();
+
+    if(!name)
+        name="Hotel BuSan KhacHieu";
+
+    document.getElementById(
+        "hotelName"
+    ).textContent=name;
+
+    localStorage.setItem(
+        "hotelName",
+        name
+    );
+
+    /* cập nhật biển hiệu */
+
+    hotel.remove(
+        signMesh
+    );
+
+    const newTexture =
+        createTextTexture(name);
+
+    const newSign =
+        new THREE.Mesh(
+            new THREE.PlaneGeometry(
+                13,
+                4.2
+            ),
+            new THREE.MeshBasicMaterial({
+                map:newTexture
+            })
+        );
+
+    newSign.position.set(
+        0,
+        8,
+        -12.5
+    );
+
+    hotel.add(newSign);
+
+    closeRename();
+
+    showToast(
+        "🏨 Đã đổi tên khách sạn!"
+    );
+};
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+window.showToast=function(text){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent=text;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer=setTimeout(
+        ()=>{
+            toast.classList.remove(
+                "show"
+            );
+        },
+        2200
+    );
+};
+
+
+/* =========================================================
+   LƯU TÊN ĐÃ ĐỔI
+========================================================= */
+
+const savedName =
+    localStorage.getItem(
+        "hotelName"
+    );
+
+if(savedName){
+
+    document.getElementById(
+        "hotelName"
+    ).textContent=savedName;
+}
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+        camera.aspect =
+            innerWidth/innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            innerWidth,
+            innerHeight
+        );
+    }
+);
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+function animate(){
+
+    requestAnimationFrame(
+        animate
+    );
+
+    const time =
+        clock.getElapsedTime();
+
+    updatePlayer();
+    updateGuests();
+
+    /* hiệu ứng nước */
+
+    scene.traverse(
+        object=>{
+
+            if(
+                object.material ===
+                waterMat
+            ){
+
+                object.position.y =
+                    .65+
+                    Math.sin(time*1.7)*.035;
+            }
+        }
+    );
+
+    controls.update();
+
+    renderer.render(
+        scene,
+        camera
+    );
+}
+
 animate();
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+setTimeout(
+    ()=>{
+        document.getElementById(
+            "loading"
+        ).style.display="none";
+
+        showToast(
+            "🏨 Chào mừng đến Hotel BuSan KhacHieu!"
+        );
+    },
+    1400
+);
+
 </script>
+
 </body>
 </html>
