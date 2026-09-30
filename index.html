@@ -3,496 +3,558 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 
-<title>Hotel BuSan KhacHieu 3D</title>
+<title>Hotel Life 3D</title>
 
 <style>
 *{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-    background:#8db8c9;
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:#8fc8dc;
+}
+
+body{
+  touch-action:none;
 }
 
 #game{
-    position:fixed;
-    inset:0;
-    overflow:hidden;
-    background:
-        linear-gradient(#77a9bd 0%,#c5dfe0 45%,#9ab98d 100%);
+  position:fixed;
+  inset:0;
+  overflow:hidden;
 }
 
 canvas{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    display:block;
+  display:block;
+  width:100%;
+  height:100%;
 }
 
-/* ================= TOP BAR ================= */
+/* ================= TOP UI ================= */
 
-.top{
-    position:absolute;
-    top:12px;
-    left:12px;
-    right:12px;
-    height:72px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    pointer-events:none;
-    z-index:10;
+#topUI{
+  position:absolute;
+  top:max(12px,env(safe-area-inset-top));
+  left:12px;
+  right:12px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  pointer-events:none;
+  z-index:10;
 }
 
 .profile{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:5px 12px 5px 5px;
-    border-radius:20px;
-    background:rgba(23,39,57,.88);
-    border:2px solid rgba(255,255,255,.45);
-    color:white;
-    box-shadow:0 5px 16px rgba(0,0,0,.25);
+  width:265px;
+  min-height:92px;
+  border-radius:25px;
+  background:rgba(28,51,74,.94);
+  box-shadow:0 8px 25px rgba(0,0,0,.22);
+  color:white;
+  padding:10px 14px 10px 9px;
+  display:flex;
+  align-items:center;
+  gap:11px;
 }
 
 .avatar{
-    width:54px;
-    height:54px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:31px;
-    background:linear-gradient(#ffdca7,#ee8e69);
-    border:3px solid white;
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  background:linear-gradient(#ffe5ca,#fff);
+  border:4px solid white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:42px;
+  flex:none;
 }
 
-.profile b{
-    display:block;
-    font-size:16px;
+.profileText{
+  min-width:0;
+}
+
+.hotelName{
+  font-weight:800;
+  font-size:20px;
+  line-height:22px;
+  white-space:normal;
 }
 
 .level{
-    margin-top:3px;
-    font-size:12px;
-    opacity:.9;
+  margin-top:4px;
+  color:#dce8f0;
+  font-size:15px;
 }
 
-.xp{
-    margin-top:3px;
-    width:120px;
-    height:6px;
-    background:#526276;
-    border-radius:10px;
-    overflow:hidden;
+.xpbar{
+  height:9px;
+  margin-top:6px;
+  border-radius:10px;
+  background:#5b7184;
+  overflow:hidden;
 }
 
-.xp span{
-    display:block;
-    width:52%;
-    height:100%;
-    background:#61c9ff;
+.xpfill{
+  height:100%;
+  width:53%;
+  background:linear-gradient(90deg,#55d8ff,#7de7ff);
+  border-radius:10px;
 }
 
-.resources{
-    display:flex;
-    gap:8px;
+.stats{
+  display:flex;
+  gap:9px;
+  align-items:center;
 }
 
-.resource{
-    min-width:94px;
-    height:40px;
-    padding:0 9px;
-    border-radius:20px;
-    background:rgba(20,38,53,.9);
-    border:2px solid rgba(255,255,255,.45);
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    font-weight:800;
-    font-size:15px;
-    box-shadow:0 4px 10px rgba(0,0,0,.2);
+.stat{
+  height:62px;
+  min-width:100px;
+  padding:0 13px;
+  border-radius:22px;
+  background:rgba(28,51,74,.94);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-weight:800;
+  font-size:18px;
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
 }
 
-.resource span{
-    font-size:21px;
-}
-
-.plus{
-    width:22px;
-    height:22px;
-    border-radius:50%;
-    background:#3ec85a;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    font-size:16px!important;
-}
+.stat.money{color:#68ec83}
+.stat.gem{color:#df9cff}
+.stat.star{color:#ffd95b}
 
 /* ================= SIDE BUTTONS ================= */
 
 .side{
-    position:absolute;
-    z-index:10;
-    top:115px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
+  position:absolute;
+  z-index:15;
+  top:145px;
+  display:flex;
+  flex-direction:column;
+  gap:13px;
 }
 
-.side.left{left:10px}
-.side.right{right:10px}
+.side.left{left:12px}
+.side.right{right:12px}
 
-.circleBtn{
-    width:58px;
-    height:58px;
-    border-radius:50%;
-    border:3px solid rgba(255,255,255,.7);
-    background:linear-gradient(#376987,#163b57);
-    color:white;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 5px 12px rgba(0,0,0,.3);
-    font-size:24px;
-    cursor:pointer;
+.sideBtn{
+  width:92px;
+  height:92px;
+  border:0;
+  border-radius:27px;
+  background:rgba(29,53,77,.95);
+  color:#fff;
+  box-shadow:0 9px 20px rgba(0,0,0,.2);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  font-size:14px;
+  font-weight:800;
 }
 
-.circleBtn small{
-    font-size:10px;
-    font-weight:800;
-    margin-top:1px;
+.sideBtn span{
+  font-size:37px;
+  line-height:40px;
 }
 
-.badge{
-    position:absolute;
-    margin-left:34px;
-    margin-top:-8px;
-    width:22px;
-    height:22px;
-    border-radius:50%;
-    background:#f04444;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:12px;
-    font-weight:900;
+.sideBtn:active{
+  transform:scale(.94);
 }
 
-/* ================= HOTEL TITLE ================= */
+/* ================= BOTTOM NAV ================= */
 
-.hotelTitle{
-    position:absolute;
-    z-index:5;
-    top:95px;
-    left:50%;
-    transform:translateX(-50%);
-    text-align:center;
-    color:white;
-    pointer-events:none;
-    text-shadow:0 3px 5px #000;
+#bottomNav{
+  position:absolute;
+  z-index:20;
+  left:12px;
+  right:12px;
+  bottom:max(10px,env(safe-area-inset-bottom));
+  height:104px;
+  border-radius:29px;
+  background:rgba(29,53,67,.96);
+  box-shadow:0 -5px 25px rgba(0,0,0,.2);
+  padding:8px;
+  display:flex;
+  gap:8px;
 }
 
-.hotelTitle h1{
-    margin:0;
-    font-family:Georgia,serif;
-    font-size:27px;
-    letter-spacing:.5px;
+.navBtn{
+  flex:1;
+  min-width:0;
+  border:0;
+  border-radius:23px;
+  background:linear-gradient(#fff,#f3f5f6);
+  color:#263d50;
+  font-weight:800;
+  font-size:13px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
 }
 
-.hotelTitle div{
-    font-size:12px;
-    letter-spacing:5px;
-    margin-top:2px;
+.navBtn .icon{
+  font-size:33px;
+  line-height:35px;
 }
 
-/* ================= BOTTOM MENU ================= */
-
-.bottomMenu{
-    position:absolute;
-    z-index:15;
-    left:50%;
-    bottom:17px;
-    transform:translateX(-50%);
-    display:flex;
-    gap:7px;
-    padding:7px;
-    border-radius:25px;
-    background:rgba(24,40,52,.82);
-    border:2px solid rgba(255,255,255,.35);
-    box-shadow:0 7px 20px rgba(0,0,0,.3);
+.navBtn:active{
+  transform:scale(.95);
 }
 
-.menuBtn{
-    width:72px;
-    height:76px;
-    border:0;
-    border-radius:19px;
-    color:white;
-    background:linear-gradient(#74b4ce,#244c67);
-    box-shadow:inset 0 2px rgba(255,255,255,.35);
-    font-weight:800;
-    cursor:pointer;
+/* ================= JOYSTICK ================= */
+
+#joystick{
+  position:absolute;
+  z-index:18;
+  left:32px;
+  bottom:140px;
+  width:155px;
+  height:155px;
+  border:3px solid rgba(255,255,255,.48);
+  border-radius:50%;
+  background:rgba(255,255,255,.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-.menuBtn .icon{
-    width:43px;
-    height:43px;
-    margin:auto;
-    margin-bottom:2px;
-    border-radius:50%;
-    background:#fff;
-    color:#2b6887;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:25px;
+#stick{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:rgba(247,250,238,.92);
+  box-shadow:0 8px 20px rgba(0,0,0,.18);
 }
 
-.menuBtn:active{
-    transform:scale(.93);
+/* ================= CAMERA HELP ================= */
+
+#cameraHint{
+  position:absolute;
+  z-index:5;
+  left:50%;
+  bottom:120px;
+  transform:translateX(-50%);
+  padding:8px 15px;
+  border-radius:20px;
+  background:rgba(15,32,46,.48);
+  color:white;
+  font-size:12px;
+  pointer-events:none;
 }
 
-/* ================= PANELS ================= */
+/* ================= MODAL ================= */
+
+#modal{
+  position:absolute;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(4,16,26,.52);
+  backdrop-filter:blur(5px);
+}
 
 .panel{
-    position:absolute;
-    z-index:20;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    width:min(92%,520px);
-    max-height:80vh;
-    overflow:auto;
-    padding:18px;
-    border-radius:25px;
-    background:rgba(27,43,56,.96);
-    color:white;
-    border:2px solid rgba(255,255,255,.35);
-    box-shadow:0 20px 60px rgba(0,0,0,.45);
-    display:none;
+  width:min(92vw,520px);
+  max-height:82vh;
+  overflow:auto;
+  border-radius:28px;
+  background:#f7f3ec;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+  padding:20px;
+  color:#273b49;
 }
 
-.panel.show{
-    display:block;
+.panelHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:15px;
 }
 
-.panel h2{
-    margin:0 0 15px;
+.panelTitle{
+  font-size:25px;
+  font-weight:900;
 }
 
 .close{
-    float:right;
-    border:0;
-    background:#e85b5b;
-    color:white;
-    width:32px;
-    height:32px;
-    border-radius:50%;
-    font-size:18px;
+  width:42px;
+  height:42px;
+  border:0;
+  border-radius:50%;
+  background:#263e50;
+  color:white;
+  font-size:22px;
 }
 
-.room{
-    background:#314c5e;
-    padding:13px;
-    margin:8px 0;
-    border-radius:15px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+.card{
+  background:white;
+  border-radius:19px;
+  padding:13px;
+  margin:9px 0;
+  box-shadow:0 3px 12px rgba(0,0,0,.08);
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
-.room button,
-.upgrade{
-    border:0;
-    border-radius:12px;
-    padding:9px 14px;
-    background:#ffc53d;
-    font-weight:900;
+.cardIcon{
+  width:60px;
+  height:60px;
+  border-radius:16px;
+  background:#e7f0f3;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:35px;
 }
 
-/* ================= NOTIFICATION ================= */
-
-.toast{
-    position:absolute;
-    z-index:50;
-    left:50%;
-    top:95px;
-    transform:translateX(-50%) translateY(-20px);
-    padding:11px 20px;
-    border-radius:20px;
-    color:white;
-    background:rgba(19,37,51,.92);
-    border:1px solid rgba(255,255,255,.4);
-    opacity:0;
-    pointer-events:none;
-    transition:.3s;
+.cardInfo{
+  flex:1;
 }
 
-.toast.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
+.cardTitle{
+  font-weight:900;
+  font-size:16px;
 }
 
-/* ================= MOBILE ================= */
-
-@media(max-width:700px){
-
-    .top{
-        top:7px;
-        left:7px;
-        right:7px;
-        height:60px;
-    }
-
-    .avatar{
-        width:43px;
-        height:43px;
-        font-size:25px;
-    }
-
-    .profile{
-        padding-right:8px;
-    }
-
-    .profile b{
-        font-size:12px;
-    }
-
-    .xp{
-        width:85px;
-    }
-
-    .resources{
-        gap:4px;
-    }
-
-    .resource{
-        min-width:auto;
-        height:33px;
-        padding:0 6px;
-        font-size:11px;
-    }
-
-    .resource span{
-        font-size:16px;
-    }
-
-    .resource .plus{
-        width:17px;
-        height:17px;
-        font-size:12px!important;
-    }
-
-    .side{
-        top:100px;
-        gap:7px;
-    }
-
-    .circleBtn{
-        width:48px;
-        height:48px;
-        font-size:20px;
-    }
-
-    .circleBtn small{
-        font-size:8px;
-    }
-
-    .hotelTitle{
-        top:78px;
-    }
-
-    .hotelTitle h1{
-        font-size:20px;
-    }
-
-    .hotelTitle div{
-        font-size:9px;
-        letter-spacing:3px;
-    }
-
-    .bottomMenu{
-        bottom:8px;
-        max-width:96%;
-        overflow-x:auto;
-        padding:5px;
-    }
-
-    .menuBtn{
-        flex:0 0 58px;
-        width:58px;
-        height:63px;
-        font-size:9px;
-    }
-
-    .menuBtn .icon{
-        width:34px;
-        height:34px;
-        font-size:19px;
-    }
-
-    .panel{
-        width:94%;
-    }
+.cardSub{
+  color:#687986;
+  margin-top:3px;
+  font-size:13px;
 }
 
-/* Hide UI while loading */
+.action{
+  border:0;
+  border-radius:13px;
+  padding:10px 13px;
+  background:#ffbd36;
+  color:white;
+  font-weight:900;
+}
+
+.action.green{
+  background:#42bb6b;
+}
+
+.renameBox{
+  display:flex;
+  gap:8px;
+}
+
+.renameBox input{
+  flex:1;
+  min-width:0;
+  padding:13px;
+  border-radius:14px;
+  border:2px solid #d4dfe3;
+  font-size:16px;
+}
+
+/* ================= LOADING ================= */
+
 #loading{
-    position:absolute;
-    inset:0;
-    z-index:100;
-    background:linear-gradient(#76a9bc,#dce6d7);
-    display:flex;
-    align-items:center;
-    justify-content:center;
+  position:absolute;
+  inset:0;
+  z-index:200;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(#86c2d6,#cfe5db);
 }
 
 .loadingBox{
-    width:300px;
-    padding:28px;
-    text-align:center;
-    color:white;
-    background:#25394f;
-    border-radius:25px;
-    box-shadow:0 15px 50px rgba(0,0,0,.35);
+  width:310px;
+  padding:28px;
+  border-radius:30px;
+  text-align:center;
+  color:white;
+  background:#263e55;
+  box-shadow:0 20px 60px rgba(0,0,0,.28);
 }
 
-.loadingBox .emoji{
-    font-size:52px;
+.loadingLogo{
+  font-size:65px;
 }
 
-.loadingBox h2{
-    margin:8px 0;
+.loadingTitle{
+  font-size:22px;
+  font-weight:900;
+  margin:6px 0;
 }
 
-.progress{
-    height:7px;
-    background:#516477;
-    border-radius:10px;
-    overflow:hidden;
-    margin-top:17px;
+.loadingText{
+  color:#d4e0e7;
 }
 
-.progress span{
-    display:block;
-    width:0;
-    height:100%;
-    background:#ffc43d;
-    transition:width 2s;
+.loader{
+  margin-top:18px;
+  height:8px;
+  border-radius:20px;
+  overflow:hidden;
+  background:#526a7e;
+}
+
+.loader i{
+  display:block;
+  height:100%;
+  width:0%;
+  background:#5ee4ff;
+  animation:load 2s forwards;
+}
+
+@keyframes load{
+  to{width:100%}
+}
+
+/* ================= TOAST ================= */
+
+#toast{
+  position:absolute;
+  z-index:300;
+  left:50%;
+  top:105px;
+  transform:translateX(-50%) translateY(-20px);
+  background:rgba(24,42,57,.94);
+  color:white;
+  padding:12px 20px;
+  border-radius:22px;
+  font-weight:800;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+}
+
+#toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:700px){
+
+  .profile{
+    width:225px;
+    min-height:78px;
+    border-radius:22px;
+    padding:7px;
+  }
+
+  .avatar{
+    width:57px;
+    height:57px;
+    font-size:34px;
+  }
+
+  .hotelName{
+    font-size:17px;
+    line-height:19px;
+  }
+
+  .level{
+    font-size:13px;
+  }
+
+  .stats{
+    gap:5px;
+  }
+
+  .stat{
+    min-width:auto;
+    height:58px;
+    padding:0 9px;
+    font-size:15px;
+  }
+
+  .stat:nth-child(1){
+    display:none;
+  }
+
+  .side{
+    top:118px;
+    gap:9px;
+  }
+
+  .sideBtn{
+    width:82px;
+    height:82px;
+    border-radius:24px;
+  }
+
+  .sideBtn span{
+    font-size:31px;
+  }
+
+  #bottomNav{
+    height:94px;
+    border-radius:26px;
+  }
+
+  .navBtn{
+    border-radius:20px;
+    font-size:11px;
+  }
+
+  .navBtn .icon{
+    font-size:29px;
+  }
+
+  #joystick{
+    width:135px;
+    height:135px;
+    left:23px;
+    bottom:116px;
+  }
+
+  #stick{
+    width:62px;
+    height:62px;
+  }
+
+  #cameraHint{
+    display:none;
+  }
+}
+
+@media(max-width:430px){
+
+  .profile{
+    width:210px;
+  }
+
+  .stat{
+    height:52px;
+    padding:0 7px;
+    font-size:13px;
+  }
+
+  .sideBtn{
+    width:76px;
+    height:76px;
+  }
+
+  #bottomNav{
+    gap:5px;
+    padding:6px;
+  }
 }
 </style>
 </head>
@@ -501,992 +563,2117 @@ canvas{
 
 <div id="game">
 
-    <div id="loading">
-        <div class="loadingBox">
-            <div class="emoji">🏨</div>
-            <h2>Hotel BuSan KhacHieu 3D</h2>
-            <div>Đang dựng khách sạn...</div>
-            <div class="progress">
-                <span id="progress"></span>
-            </div>
-        </div>
+<canvas id="canvas"></canvas>
+
+<!-- ================= TOP ================= -->
+
+<div id="topUI">
+
+  <div class="profile">
+    <div class="avatar">👩🏻</div>
+
+    <div class="profileText">
+      <div class="hotelName" id="hotelNameUI">
+        Hotel BuSan KhacChieu
+      </div>
+
+      <div class="level">
+        Lv. 5 · <span id="xpText">320/600</span> XP
+      </div>
+
+      <div class="xpbar">
+        <div class="xpfill" id="xpFill"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+
+    <div class="stat money">
+      💵 <span id="money">12,580</span>
     </div>
 
-    <!-- TOP -->
-    <div class="top">
-
-        <div class="profile">
-            <div class="avatar">👩🏻</div>
-            <div>
-                <b>Hotel BuSan KhacHieu</b>
-                <div class="level">Lv. 5　320/600</div>
-                <div class="xp"><span></span></div>
-            </div>
-        </div>
-
-        <div class="resources">
-            <div class="resource">
-                <span>💵</span> 12.580
-                <span class="plus">+</span>
-            </div>
-
-            <div class="resource">
-                <span>💎</span> 245
-                <span class="plus">+</span>
-            </div>
-
-            <div class="resource">
-                <span>⭐</span> 4.2
-            </div>
-        </div>
-
+    <div class="stat gem">
+      💎 <span id="gems">245</span>
     </div>
 
-    <!-- LEFT -->
-    <div class="side left">
-        <button class="circleBtn" onclick="openPanel('mission')">
-            📋
-            <small>Nhiệm vụ</small>
-            <span class="badge">3</span>
-        </button>
-
-        <button class="circleBtn" onclick="showToast('🎁 Bạn nhận được quà!')">
-            🎁
-            <small>Quà tặng</small>
-        </button>
-
-        <button class="circleBtn" onclick="showToast('👑 Khu VIP đang được mở rộng')">
-            👑
-            <small>VIP</small>
-        </button>
+    <div class="stat star">
+      ⭐ <span id="rating">4.8</span>
     </div>
 
-    <!-- RIGHT -->
-    <div class="side right">
-        <button class="circleBtn" onclick="showToast('🗺️ Camera tự do: kéo màn hình để xoay')">
-            🗺️
-            <small>Bản đồ</small>
-        </button>
-
-        <button class="circleBtn" onclick="showToast('📸 Đã chụp ảnh khách sạn!')">
-            📷
-            <small>Chụp ảnh</small>
-        </button>
-
-        <button class="circleBtn" onclick="showToast('📱 Liên hệ lễ tân')">
-            📱
-            <small>Liên hệ</small>
-        </button>
-    </div>
-
-    <div class="hotelTitle">
-        <h1>Hotel BuSan KhacHieu</h1>
-        <div>★★★★★ HOTEL</div>
-    </div>
-
-    <!-- BOTTOM -->
-    <div class="bottomMenu">
-
-        <button class="menuBtn" onclick="openPanel('hotel')">
-            <div class="icon">🏨</div>
-            Khách sạn
-        </button>
-
-        <button class="menuBtn" onclick="openPanel('rooms')">
-            <div class="icon">🛏️</div>
-            Phòng
-        </button>
-
-        <button class="menuBtn" onclick="openPanel('restaurant')">
-            <div class="icon">🍽️</div>
-            Nhà hàng
-        </button>
-
-        <button class="menuBtn" onclick="openPanel('pool')">
-            <div class="icon">🏊</div>
-            Hồ bơi
-        </button>
-
-        <button class="menuBtn" onclick="openPanel('staff')">
-            <div class="icon">👨🏻‍💼</div>
-            Nhân viên
-        </button>
-
-        <button class="menuBtn" onclick="openPanel('upgrade')">
-            <div class="icon">⬆️</div>
-            Nâng cấp
-        </button>
-
-    </div>
-
-    <!-- PANELS -->
-
-    <div id="hotel" class="panel">
-        <button class="close" onclick="closePanels()">×</button>
-        <h2>🏨 Khách sạn</h2>
-        <p>Hotel BuSan KhacHieu</p>
-        <p>⭐ Xếp hạng: 5 sao</p>
-        <p>👥 Khách hiện tại: 18</p>
-        <p>💰 Doanh thu hôm nay: $1.240</p>
-    </div>
-
-    <div id="rooms" class="panel">
-        <button class="close" onclick="closePanels()">×</button>
-        <h2>🛏️ Phòng khách sạn</h2>
-
-        <div class="room">
-            <span>Phòng 101<br>⭐ Deluxe<br>$120/đêm</span>
-            <button onclick="showToast('Đã nhận khách phòng 101')">
-                Nhận khách
-            </button>
-        </div>
-
-        <div class="room">
-            <span>Phòng 102<br>⭐ Deluxe<br>$120/đêm</span>
-            <button onclick="showToast('Đã nhận khách phòng 102')">
-                Nhận khách
-            </button>
-        </div>
-
-        <div class="room">
-            <span>Phòng 201<br>⭐⭐ Premium<br>$180/đêm</span>
-            <button onclick="showToast('Đã nhận khách phòng 201')">
-                Nhận khách
-            </button>
-        </div>
-    </div>
-
-    <div id="restaurant" class="panel">
-        <button class="close" onclick="closePanels()">×</button>
-        <h2>🍽️ Nhà hàng</h2>
-        <p>👨‍🍳 Bếp trưởng đang làm việc</p>
-        <p>🍲 Bàn đang phục vụ: 8</p>
-        <p>💰 Doanh thu hôm nay: $680</p>
-
-        <button class="upgrade"
-        onclick="showToast('🍽️ Nhà hàng đã nâng cấp!')">
-        Nâng cấp nhà hàng - $3.000
-        </button>
-    </div>
-
-    <div id="pool" class="panel">
-        <button class="close" onclick="closePanels()">×</button>
-        <h2>🏊 Hồ bơi</h2>
-        <p>🏊 Khách đang bơi: 7</p>
-        <p>💰 Doanh thu hôm nay: $420</p>
-
-        <button class="upgrade"
-        onclick="showToast('🏊 Hồ bơi được nâng cấp!')">
-        Nâng cấp hồ bơi - $4.000
-        </button>
-    </div>
-
-    <div id="staff" class="panel">
-        <button class="close" onclick="closePanels()"></button>
-        <h2>👨🏻‍💼 Nhân viên</h2>
-
-        <div class="room">
-            👩🏻 Lễ tân — Lv.3
-            <span>🟢 Làm việc</span>
-        </div>
-
-        <div class="room">
-            👩🏻 Dọn phòng — Lv.2
-            <span>🟢 Làm việc</span>
-        </div>
-
-        <div class="room">
-            👨🏻‍🍳 Đầu bếp — Lv.2
-            <span>🟢 Làm việc</span>
-        </div>
-
-        <div class="room">
-            👮 Bảo vệ — Lv.1
-            <span>🟢 Làm việc</span>
-        </div>
-    </div>
-
-    <div id="upgrade" class="panel">
-        <button class="close" onclick="closePanels()">×</button>
-        <h2>⬆️ Nâng cấp khách sạn</h2>
-
-        <div class="room">
-            🏨 Mặt tiền khách sạn
-            <button class="upgrade"
-            onclick="showToast('🏨 Mặt tiền đã nâng cấp!')">
-            $5.000
-            </button>
-        </div>
-
-        <div class="room">
-            🍽️ Nhà hàng
-            <button class="upgrade"
-            onclick="showToast('🍽️ Nhà hàng đã nâng cấp!')">
-            $3.000
-            </button>
-        </div>
-
-        <div class="room">
-            🏊 Hồ bơi
-            <button class="upgrade"
-            onclick="showToast('🏊 Hồ bơi đã nâng cấp!')">
-            $4.000
-            </button>
-        </div>
-
-        <div class="room">
-            🛎️ Sảnh lễ tân
-            <button class="upgrade"
-            onclick="showToast('🛎️ Sảnh đã nâng cấp!')">
-            $2.000
-            </button>
-        </div>
-    </div>
-
-    <div id="mission" class="panel">
-        <button class="close" onclick="closePanels()">×</button>
-        <h2>📋 Nhiệm vụ</h2>
-
-        <div class="room">
-            🏨 Xây 3 phòng mới
-            <b>2/3</b>
-        </div>
-
-        <div class="room">
-            🏊 Phục vụ 10 khách hồ bơi
-            <b>7/10</b>
-        </div>
-
-        <div class="room">
-            💰 Kiếm $5.000
-            <b>$3.820</b>
-        </div>
-    </div>
-
-    <div id="toast" class="toast"></div>
+  </div>
 
 </div>
 
-<!-- THREE.JS -->
+<!-- ================= LEFT ================= -->
+
+<div class="side left">
+
+  <button class="sideBtn" onclick="openPanel('mission')">
+    <span>📋</span>
+    Nhiệm vụ
+  </button>
+
+  <button class="sideBtn" onclick="openPanel('gift')">
+    <span>🎁</span>
+    Quà
+  </button>
+
+  <button class="sideBtn" onclick="openPanel('vip')">
+    <span>👑</span>
+    VIP
+  </button>
+
+</div>
+
+<!-- ================= RIGHT ================= -->
+
+<div class="side right">
+
+  <button class="sideBtn" onclick="cameraMode()">
+    <span>🎥</span>
+    Camera
+  </button>
+
+  <button class="sideBtn" onclick="openPanel('map')">
+    <span>🗺️</span>
+    Bản đồ
+  </button>
+
+  <button class="sideBtn" onclick="toggleNight()">
+    <span id="dayIcon">🌙</span>
+    <span style="font-size:14px">Ngày/Đêm</span>
+  </button>
+
+</div>
+
+<!-- ================= JOYSTICK ================= -->
+
+<div id="joystick">
+  <div id="stick"></div>
+</div>
+
+<div id="cameraHint">
+  Kéo màn hình để xoay camera · Chụm để zoom
+</div>
+
+<!-- ================= BOTTOM ================= -->
+
+<div id="bottomNav">
+
+  <button class="navBtn" onclick="openPanel('hotel')">
+    <div class="icon">🏨</div>
+    Khách sạn
+  </button>
+
+  <button class="navBtn" onclick="openPanel('rooms')">
+    <div class="icon">🛏️</div>
+    Phòng
+  </button>
+
+  <button class="navBtn" onclick="openPanel('restaurant')">
+    <div class="icon">🍽️</div>
+    Nhà hàng
+  </button>
+
+  <button class="navBtn" onclick="openPanel('pool')">
+    <div class="icon">🏊</div>
+    Hồ bơi
+  </button>
+
+  <button class="navBtn" onclick="openPanel('staff')">
+    <div class="icon">👨🏻</div>
+    Nhân viên
+  </button>
+
+  <button class="navBtn" onclick="openPanel('upgrade')">
+    <div class="icon">✏️</div>
+    Đổi tên
+  </button>
+
+</div>
+
+<!-- ================= MODAL ================= -->
+
+<div id="modal">
+
+  <div class="panel">
+
+    <div class="panelHead">
+      <div class="panelTitle" id="panelTitle"></div>
+      <button class="close" onclick="closePanel()">×</button>
+    </div>
+
+    <div id="panelContent"></div>
+
+  </div>
+
+</div>
+
+<!-- ================= TOAST ================= -->
+
+<div id="toast"></div>
+
+<!-- ================= LOADING ================= -->
+
+<div id="loading">
+
+  <div class="loadingBox">
+
+    <div class="loadingLogo">🏨</div>
+
+    <div class="loadingTitle">
+      Hotel BuSan KhacChieu 3D
+    </div>
+
+    <div class="loadingText">
+      Đang dựng khách sạn...
+    </div>
+
+    <div class="loader">
+      <i></i>
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+<!-- =========================================================
+     THREE.JS
+========================================================= -->
+
+<script type="importmap">
+{
+  "imports":{
+    "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
 <script type="module">
 
-import * as THREE from
-'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+import * as THREE from "three";
 
-import { OrbitControls } from
-'https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/controls/OrbitControls.js';
+import {
+  OrbitControls
+} from "three/addons/controls/OrbitControls.js";
 
-let scene;
-let camera;
-let renderer;
-let controls;
+import {
+  RoundedBoxGeometry
+} from "three/addons/geometries/RoundedBoxGeometry.js";
 
-let people = [];
 
-init();
-animate();
+/* =========================================================
+   BASIC
+========================================================= */
 
-/* ================= INITIALIZE ================= */
+const canvas = document.getElementById("canvas");
 
-function init(){
+const renderer = new THREE.WebGLRenderer({
+  canvas,
+  antialias:true,
+  powerPreference:"high-performance"
+});
 
-    scene = new THREE.Scene();
+renderer.setPixelRatio(
+  Math.min(window.devicePixelRatio,2)
+);
 
-    scene.background = new THREE.Color(0x8bb8c8);
+renderer.setSize(
+  window.innerWidth,
+  window.innerHeight
+);
 
-    scene.fog = new THREE.Fog(
-        0x8bb8c8,
-        35,
-        90
-    );
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 
-    camera = new THREE.PerspectiveCamera(
-        48,
-        window.innerWidth/window.innerHeight,
-        .1,
-        150
-    );
+renderer.outputColorSpace=THREE.SRGBColorSpace;
 
-    camera.position.set(
-        18,
-        15,
-        22
-    );
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.15;
 
-    renderer = new THREE.WebGLRenderer({
-        antialias:true,
-        powerPreference:"high-performance"
-    });
 
-    renderer.setSize(
-        window.innerWidth,
-        window.innerHeight
-    );
+/* =========================================================
+   SCENE
+========================================================= */
 
-    renderer.setPixelRatio(
-        Math.min(window.devicePixelRatio,2)
-    );
+const scene = new THREE.Scene();
 
-    renderer.shadowMap.enabled = true;
+scene.background=new THREE.Color("#8ec6d8");
 
-    renderer.shadowMap.type =
-        THREE.PCFSoftShadowMap;
+scene.fog=new THREE.Fog(
+  "#8ec6d8",
+  45,
+  130
+);
 
-    renderer.outputColorSpace =
-        THREE.SRGBColorSpace;
 
-    renderer.toneMapping =
-        THREE.ACESFilmicToneMapping;
+/* =========================================================
+   CAMERA
+========================================================= */
 
-    renderer.toneMappingExposure = 1.15;
+const camera = new THREE.PerspectiveCamera(
+  48,
+  window.innerWidth/window.innerHeight,
+  .1,
+  300
+);
 
-    document
-        .getElementById("game")
-        .appendChild(renderer.domElement);
+camera.position.set(
+  32,
+  25,
+  36
+);
 
-    controls = new OrbitControls(
-        camera,
-        renderer.domElement
-    );
 
-    controls.enableDamping = true;
+/* =========================================================
+   CONTROLS
+========================================================= */
 
-    controls.dampingFactor = .07;
+const controls = new OrbitControls(
+  camera,
+  renderer.domElement
+);
 
-    controls.minDistance = 13;
+controls.target.set(
+  0,
+  7,
+  0
+);
 
-    controls.maxDistance = 45;
+controls.enableDamping=true;
+controls.dampingFactor=.07;
 
-    controls.maxPolarAngle =
-        Math.PI/2.05;
+controls.minDistance=18;
+controls.maxDistance=70;
 
-    controls.target.set(
-        0,
-        4,
-        0
-    );
+controls.maxPolarAngle=Math.PI*.48;
+controls.minPolarAngle=.35;
 
-    createLights();
+controls.enablePan=false;
 
-    createGround();
 
-    createHotel();
+/* =========================================================
+   LIGHTS
+========================================================= */
 
-    createPool();
+const hemi = new THREE.HemisphereLight(
+  "#fff4dc",
+  "#557060",
+  2.1
+);
 
-    createTrees();
+scene.add(hemi);
 
-    createPeople();
 
-    createRoad();
+const sun = new THREE.DirectionalLight(
+  "#fff3d0",
+  4
+);
 
-    window.addEventListener(
-        "resize",
-        resize
-    );
+sun.position.set(
+  -35,
+  55,
+  30
+);
 
-    setTimeout(()=>{
-        document
-            .getElementById("progress")
-            .style.width="100%";
+sun.castShadow=true;
 
-        setTimeout(()=>{
-            document
-                .getElementById("loading")
-                .style.display="none";
-        },800);
+sun.shadow.mapSize.set(
+  2048,
+  2048
+);
 
-    },200);
+sun.shadow.camera.left=-55;
+sun.shadow.camera.right=55;
+sun.shadow.camera.top=55;
+sun.shadow.camera.bottom=-55;
+
+sun.shadow.bias=-.0003;
+
+scene.add(sun);
+
+
+/* =========================================================
+   NIGHT LIGHT
+========================================================= */
+
+const nightLight = new THREE.DirectionalLight(
+  "#6589ff",
+  0
+);
+
+nightLight.position.set(
+  20,
+  45,
+  -30
+);
+
+scene.add(nightLight);
+
+
+/* =========================================================
+   MATERIAL HELPERS
+========================================================= */
+
+function mat(color,roughness=.8,metalness=0){
+
+  return new THREE.MeshStandardMaterial({
+    color,
+    roughness,
+    metalness
+  });
+
 }
-
-/* ================= LIGHT ================= */
-
-function createLights(){
-
-    const hemi =
-        new THREE.HemisphereLight(
-            0xbfeaff,
-            0x5b654e,
-            2.2
-        );
-
-    scene.add(hemi);
-
-    const sun =
-        new THREE.DirectionalLight(
-            0xfff0d0,
-            4
-        );
-
-    sun.position.set(
-        -20,
-        35,
-        15
-    );
-
-    sun.castShadow=true;
-
-    sun.shadow.mapSize.width=2048;
-
-    sun.shadow.mapSize.height=2048;
-
-    sun.shadow.camera.left=-40;
-    sun.shadow.camera.right=40;
-    sun.shadow.camera.top=40;
-    sun.shadow.camera.bottom=-40;
-
-    scene.add(sun);
-}
-
-/* ================= GROUND ================= */
-
-function createGround(){
-
-    const geo =
-        new THREE.PlaneGeometry(
-            100,
-            100
-        );
-
-    const mat =
-        new THREE.MeshStandardMaterial({
-            color:0x708b62,
-            roughness:.9
-        });
-
-    const ground =
-        new THREE.Mesh(
-            geo,
-            mat
-        );
-
-    ground.rotation.x=-Math.PI/2;
-
-    ground.receiveShadow=true;
-
-    scene.add(ground);
-}
-
-/* ================= HOTEL ================= */
 
 function box(
+  w,
+  h,
+  d,
+  color,
+  x=0,
+  y=0,
+  z=0,
+  radius=.12
+){
+
+  const g=new RoundedBoxGeometry(
     w,h,d,
-    color,
-    x,y,z
-){
+    3,
+    radius
+  );
 
-    const geo =
-        new THREE.BoxGeometry(
-            w,h,d
-        );
+  const m=new THREE.Mesh(
+    g,
+    mat(color)
+  );
 
-    const mat =
-        new THREE.MeshStandardMaterial({
-            color,
-            roughness:.7
-        });
+  m.position.set(x,y,z);
 
-    const mesh =
-        new THREE.Mesh(
-            geo,
-            mat
-        );
+  m.castShadow=true;
+  m.receiveShadow=true;
 
-    mesh.position.set(
-        x,y,z
-    );
+  scene.add(m);
 
-    mesh.castShadow=true;
-
-    mesh.receiveShadow=true;
-
-    scene.add(mesh);
-
-    return mesh;
+  return m;
 }
 
-function createHotel(){
 
-    /* main building */
-
-    box(
-        24,8,14,
-        0xf0dfc7,
-        0,4,0
-    );
-
-    /* upper floor */
-
-    box(
-        19,6,11,
-        0xe8d4bb,
-        0,11,0
-    );
-
-    /* center tower */
-
-    box(
-        8,10,9,
-        0xf6e3ca,
-        0,12,0
-    );
-
-    /* roof */
-
-    box(
-        21,1,13,
-        0x8a543d,
-        0,14.5,0
-    );
-
-    /* center roof */
-
-    const roofGeo =
-        new THREE.ConeGeometry(
-            6.5,
-            3.5,
-            4
-        );
-
-    const roofMat =
-        new THREE.MeshStandardMaterial({
-            color:0x75402f
-        });
-
-    const roof =
-        new THREE.Mesh(
-            roofGeo,
-            roofMat
-        );
-
-    roof.position.set(
-        0,21,0
-    );
-
-    roof.rotation.y=Math.PI/4;
-
-    roof.castShadow=true;
-
-    scene.add(roof);
-
-    /* windows */
-
-    for(
-        let floor=0;
-        floor<2;
-        floor++
-    ){
-
-        const y =
-            4.2 + floor*6;
-
-        for(
-            let x=-9;
-            x<=9;
-            x+=3
-        ){
-
-            if(
-                Math.abs(x)<2
-                && floor===1
-            ) continue;
-
-            const win =
-                box(
-                    1.6,
-                    2.3,
-                    .18,
-                    0x79c9ed,
-                    x,
-                    y,
-                    -7.08
-                );
-
-            win.material.metalness=.1;
-            win.material.roughness=.2;
-        }
-    }
-
-    /* entrance */
-
-    box(
-        4,
-        4,
-        .7,
-        0x5b3429,
-        0,
-        2,
-        -7.5
-    );
-
-    /* entrance roof */
-
-    box(
-        6,
-        .6,
-        2.2,
-        0x74402e,
-        0,
-        4.3,
-        -7.9
-    );
-
-    /* hotel sign */
-
-    const sign =
-        box(
-            9,
-            2.1,
-            .25,
-            0x5b3020,
-            0,
-            9,
-            -7.35
-        );
-
-    /* glowing sign */
-
-    const glow =
-        new THREE.MeshStandardMaterial({
-            color:0xffb52e,
-            emissive:0xff7b15,
-            emissiveIntensity:2
-        });
-
-    const letters =
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                6.5,1.0,.12
-            ),
-            glow
-        );
-
-    letters.position.set(
-        0,9,-7.55
-    );
-
-    scene.add(letters);
-}
-
-/* ================= POOL ================= */
-
-function createPool(){
-
-    box(
-        12,.7,8,
-        0x1f89bc,
-        13,.35,-2
-    );
-
-    box(
-        13,.4,9,
-        0xded6c2,
-        13,.15,-2
-    );
-
-    const water =
-        new THREE.Mesh(
-            new THREE.BoxGeometry(
-                11.8,.15,7.8
-            ),
-            new THREE.MeshPhysicalMaterial({
-                color:0x17bce8,
-                transparent:true,
-                opacity:.82,
-                roughness:.05,
-                metalness:.1
-            })
-        );
-
-    water.position.set(
-        13,.75,-2
-    );
-
-    scene.add(water);
-
-    /* pool lights */
-
-    for(
-        let x=9;
-        x<=17;
-        x+=4
-    ){
-
-        const light =
-            new THREE.PointLight(
-                0x65ddff,
-                8,
-                7
-            );
-
-        light.position.set(
-            x,1,-5.5
-        );
-
-        scene.add(light);
-    }
-}
-
-/* ================= TREES ================= */
-
-function createTree(x,z){
-
-    const trunk =
-        new THREE.Mesh(
-            new THREE.CylinderGeometry(
-                .25,.35,2
-            ),
-            new THREE.MeshStandardMaterial({
-                color:0x70452b
-            })
-        );
-
-    trunk.position.set(
-        x,1,z
-    );
-
-    trunk.castShadow=true;
-
-    scene.add(trunk);
-
-    const crown =
-        new THREE.Mesh(
-            new THREE.SphereGeometry(
-                1.5,12,10
-            ),
-            new THREE.MeshStandardMaterial({
-                color:0x2e8248
-            })
-        );
-
-    crown.position.set(
-        x,2.8,z
-    );
-
-    crown.castShadow=true;
-
-    scene.add(crown);
-}
-
-function createTrees(){
-
-    const positions=[
-        [-15,-9],
-        [-12,8],
-        [16,8],
-        [20,-10],
-        [-18,1],
-        [21,2],
-        [5,-14],
-        [-5,-14]
-    ];
-
-    positions.forEach(
-        p=>createTree(p[0],p[1])
-    );
-}
-
-/* ================= ROAD ================= */
-
-function createRoad(){
-
-    box(
-        100,.15,6,
-        0x333b40,
-        0,-.05,14
-    );
-
-    box(
-        7,.16,100,
-        0x333b40,
-        -19,-.05,0
-    );
-
-    for(
-        let x=-45;
-        x<45;
-        x+=6
-    ){
-
-        box(
-            3,.04,.18,
-            0xffd45c,
-            x,.04,14
-        );
-    }
-}
-
-/* ================= PEOPLE ================= */
-
-function createPerson(
+/* =========================================================
+   GROUND
+========================================================= */
+
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(180,180),
+  mat("#8eb66e")
+);
+
+ground.rotation.x=-Math.PI/2;
+ground.receiveShadow=true;
+
+scene.add(ground);
+
+
+/* =========================================================
+   ROAD
+========================================================= */
+
+const road=box(
+  100,
+  .18,
+  18,
+  "#333a3c",
+  0,
+  .09,
+  27,
+  .03
+);
+
+for(let x=-45;x<=45;x+=8){
+
+  box(
+    4,
+    .03,
+    .45,
+    "#f7e8a5",
     x,
-    z
+    .2,
+    27,
+    .01
+  );
+
+}
+
+
+/* =========================================================
+   HOTEL MAIN BODY
+========================================================= */
+
+const hotel = new THREE.Group();
+
+scene.add(hotel);
+
+
+function hotelFloor(y,color){
+
+  const floor=box(
+    25,
+    5.2,
+    16,
+    color,
+    0,
+    y,
+    0,
+    .35
+  );
+
+  hotel.add(floor);
+
+  /* windows */
+
+  for(let x=-9;x<=9;x+=6){
+
+    const windowMesh=box(
+      3.6,
+      2.5,
+      .12,
+      "#72cce4",
+      x,
+      y+.1,
+      -8.08,
+      .08
+    );
+
+    windowMesh.material.metalness=.2;
+    windowMesh.material.roughness=.15;
+
+    hotel.add(windowMesh);
+
+    box(
+      3.8,
+      .18,
+      .15,
+      "#d9d3b0",
+      x,
+      y-1.3,
+      -8.2,
+      .03
+    );
+
+  }
+
+}
+
+
+hotelFloor(3.0,"#eee2ce");
+hotelFloor(8.5,"#f2e6d1");
+hotelFloor(14.0,"#ead9c1");
+
+
+/* =========================================================
+   ROOF
+========================================================= */
+
+const roof=box(
+  27,
+  1,
+  18,
+  "#60462f",
+  0,
+  17,
+  0,
+  .2
+);
+
+hotel.add(roof);
+
+
+/* =========================================================
+   HOTEL CENTRAL ENTRANCE
+========================================================= */
+
+box(
+  9,
+  6,
+  3,
+  "#d6b07b",
+  0,
+  3,
+  -9.4,
+  .25
+);
+
+const entrance=box(
+  5,
+  4.4,
+  .35,
+  "#283b45",
+  0,
+  3,
+  -11.05,
+  .1
+);
+
+entrance.material.metalness=.15;
+
+
+/* =========================================================
+   HOTEL SIGN
+========================================================= */
+
+const sign=box(
+  13,
+  2.8,
+  .45,
+  "#241f20",
+  0,
+  10.3,
+  -9.3,
+  .18
+);
+
+sign.material.emissive=new THREE.Color("#7d3e13");
+sign.material.emissiveIntensity=.45;
+
+
+/* =========================================================
+   SIGN TEXT USING CANVAS TEXTURE
+========================================================= */
+
+function textTexture(
+  text,
+  width=900,
+  height=220
 ){
 
-    const group =
-        new THREE.Group();
+  const c=document.createElement("canvas");
 
-    const body =
-        new THREE.Mesh(
-            new THREE.CylinderGeometry(
-                .32,.38,1.15,8
-            ),
-            new THREE.MeshStandardMaterial({
-                color:
-                    Math.random()>.5
-                    ?0x4b77b7
-                    :0xe26d52
-            })
-        );
+  c.width=width;
+  c.height=height;
 
-    body.position.y=.85;
+  const ctx=c.getContext("2d");
 
-    body.castShadow=true;
+  ctx.clearRect(0,0,width,height);
 
-    group.add(body);
+  ctx.fillStyle="#fff1c7";
+  ctx.font="bold 90px Arial";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
 
-    const head =
-        new THREE.Mesh(
-            new THREE.SphereGeometry(
-                .32,12,12
-            ),
-            new THREE.MeshStandardMaterial({
-                color:0xffc49a
-            })
-        );
+  ctx.fillText(
+    text,
+    width/2,
+    height/2
+  );
 
-    head.position.y=1.65;
+  const texture=new THREE.CanvasTexture(c);
 
-    head.castShadow=true;
+  texture.colorSpace=THREE.SRGBColorSpace;
 
-    group.add(head);
-
-    group.position.set(
-        x,0,z
-    );
-
-    scene.add(group);
-
-    people.push({
-        group,
-        direction:
-            Math.random()*Math.PI*2,
-        speed:
-            .006+Math.random()*.008
-    });
+  return texture;
 }
 
-function createPeople(){
+const signText=new THREE.Mesh(
+  new THREE.PlaneGeometry(11,2.5),
+  new THREE.MeshBasicMaterial({
+    map:textTexture("HOTEL"),
+    transparent:true
+  })
+);
 
-    for(
-        let i=0;
-        i<18;
-        i++
-    ){
+signText.position.set(
+  0,
+  10.3,
+  -9.58
+);
 
-        createPerson(
-            -10+
-            Math.random()*20,
+scene.add(signText);
 
-            -10+
-            Math.random()*18
-        );
+
+/* =========================================================
+   BALCONIES
+========================================================= */
+
+for(let floor=0;floor<3;floor++){
+
+  const y=5.5+floor*5.5;
+
+  for(let x=-8;x<=8;x+=8){
+
+    box(
+      5.8,
+      .18,
+      2.3,
+      "#a89b82",
+      x,
+      y,
+      -9.3,
+      .04
+    );
+
+    box(
+      5.8,
+      1.15,
+      .12,
+      "#363e40",
+      x,
+      y+.55,
+      -10.35,
+      .02
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   PALMS
+========================================================= */
+
+function palm(x,z,scale=1){
+
+  const group=new THREE.Group();
+
+  group.position.set(x,0,z);
+  group.scale.setScalar(scale);
+
+  scene.add(group);
+
+  const trunk= new THREE.Mesh(
+    new THREE.CylinderGeometry(
+      .32,
+      .48,
+      4.5,
+      9
+    ),
+    mat("#8c613b")
+  );
+
+  trunk.position.y=2.25;
+  trunk.castShadow=true;
+
+  group.add(trunk);
+
+
+  for(let i=0;i<8;i++){
+
+    const leaf=new THREE.Mesh(
+      new THREE.BoxGeometry(
+        .3,
+        .12,
+        4.5
+      ),
+      mat("#3b8d49")
+    );
+
+    leaf.position.y=4.7;
+
+    leaf.rotation.y=
+      i*Math.PI/4;
+
+    leaf.rotation.x=.35;
+
+    leaf.castShadow=true;
+
+    group.add(leaf);
+
+  }
+
+}
+
+palm(-17,-9,1.2);
+palm(17,-9,1.2);
+palm(-19,4,.9);
+palm(19,4,.9);
+palm(-17,17,1);
+palm(17,17,1);
+
+
+/* =========================================================
+   SMALL TREES
+========================================================= */
+
+function tree(x,z,s=1){
+
+  const trunk=box(
+    .65,
+    3,
+    .65,
+    "#735033",
+    x,
+    1.5,
+    z,
+    .15
+  );
+
+  const crown=new THREE.Mesh(
+    new THREE.SphereGeometry(
+      2.2*s,
+      16,
+      12
+    ),
+    mat("#4c994d")
+  );
+
+  crown.position.set(
+    x,
+    4*s,
+    z
+  );
+
+  crown.castShadow=true;
+
+  scene.add(crown);
+
+}
+
+tree(-24,-2,1);
+tree(24,-2,1);
+tree(-25,15,.9);
+tree(25,15,.9);
+
+
+/* =========================================================
+   POOL
+========================================================= */
+
+const pool=box(
+  18,
+  .7,
+  10,
+  "#58cbe5",
+  0,
+  .35,
+  20,
+  .6
+);
+
+pool.material.roughness=.1;
+pool.material.metalness=.15;
+
+
+/* pool border */
+
+box(
+  20,
+  .35,
+  12,
+  "#e5d5b7",
+  0,
+  .12,
+  20,
+  .45
+);
+
+pool.position.y=.55;
+
+
+/* water again on top */
+
+const water=new THREE.Mesh(
+  new THREE.BoxGeometry(
+    17.5,
+    .16,
+    9.5
+  ),
+  new THREE.MeshPhysicalMaterial({
+    color:"#37bce1",
+    transparent:true,
+    opacity:.82,
+    roughness:.08,
+    metalness:.05
+  })
+);
+
+water.position.set(
+  0,
+  .98,
+  20
+);
+
+scene.add(water);
+
+
+/* =========================================================
+   POOL LOUNGERS
+========================================================= */
+
+function lounger(x,z,r=0){
+
+  const g=new THREE.Group();
+
+  g.position.set(x,0,z);
+  g.rotation.y=r;
+
+  scene.add(g);
+
+  const seat=box(
+    2.2,
+    .22,
+    .8,
+    "#fff1d2",
+    0,
+    .7,
+    0,
+    .08
+  );
+
+  const back=box(
+    2.2,
+    1,
+    .18,
+    "#f4dfb4",
+    0,
+    1.15,
+    -.35,
+    .05
+  );
+
+  g.add(seat);
+  g.add(back);
+
+}
+
+lounger(-11,16,-.2);
+lounger(-11,23,.2);
+lounger(11,16,.2);
+lounger(11,23,-.2);
+
+
+/* =========================================================
+   RESTAURANT
+========================================================= */
+
+const restaurant=box(
+  12,
+  5,
+  7,
+  "#c98b57",
+  19,
+  2.7,
+  10,
+  .4
+);
+
+const restaurantRoof=box(
+  13,
+  .6,
+  8,
+  "#704331",
+  19,
+  5.4,
+  10,
+  .15
+);
+
+box(
+  8,
+  2.5,
+  .2,
+  "#382927",
+  19,
+  3,
+  6.35,
+  .08
+);
+
+
+/* =========================================================
+   RESTAURANT TABLES
+========================================================= */
+
+function table(x,z){
+
+  box(
+    1.3,
+    .15,
+    1.3,
+    "#7c5134",
+    x,
+    .95,
+    z,
+    .1
+  );
+
+  box(
+    .25,
+    .9,
+    .25,
+    "#67442e",
+    x,
+    .45,
+    z,
+    .04
+  );
+
+}
+
+table(15,9);
+table(20,9);
+table(25,9);
+table(15,13);
+table(20,13);
+table(25,13);
+
+
+/* =========================================================
+   FOUNTAIN
+========================================================= */
+
+const fountainBase=box(
+  5,
+  .5,
+  5,
+  "#d9d4c0",
+  -14,
+  .25,
+  -1,
+  .5
+);
+
+const fountainWater=box(
+  4,
+  .12,
+  4,
+  "#63d5ed",
+  -14,
+  .58,
+  -1,
+  .4
+);
+
+for(let i=0;i<5;i++){
+
+  const jet= new THREE.Mesh(
+    new THREE.CylinderGeometry(
+      .06,
+      .09,
+      2,
+      8
+    ),
+    new THREE.MeshBasicMaterial({
+      color:"#b9f6ff"
+    })
+  );
+
+  jet.position.set(
+    -14+(i-2)*.7,
+    1.5,
+    -1
+  );
+
+  scene.add(jet);
+
+}
+
+
+/* =========================================================
+   CARS
+========================================================= */
+
+function car(x,z,color){
+
+  const g=new THREE.Group();
+
+  g.position.set(x,.6,z);
+
+  scene.add(g);
+
+  const body=box(
+    4,
+    1,
+    2,
+    color,
+    0,
+    0,
+    0,
+    .3
+  );
+
+  const cabin=box(
+    2.1,
+    1,
+    1.6,
+    "#29363d",
+    0,
+    .8,
+    0,
+    .25
+  );
+
+  g.add(body);
+  g.add(cabin);
+
+  for(const wx of [-1.35,1.35]){
+
+    const wheel=new THREE.Mesh(
+      new THREE.CylinderGeometry(
+        .42,
+        .42,
+        .3,
+        16
+      ),
+      mat("#151718")
+    );
+
+    wheel.rotation.z=Math.PI/2;
+
+    wheel.position.set(
+      wx,
+      -.45,
+      1.05
+    );
+
+    g.add(wheel);
+
+    const wheel2=wheel.clone();
+
+    wheel2.position.z=-1.05;
+
+    g.add(wheel2);
+
+  }
+
+}
+
+car(-6,26,"#20262c");
+car(7,26,"#a53c34");
+
+
+/* =========================================================
+   LAMPS
+========================================================= */
+
+const lamps=[];
+
+function lamp(x,z){
+
+  box(
+    .16,
+    3,
+    .16,
+    "#272b2d",
+    x,
+    1.5,
+    z,
+    .04
+  );
+
+  const light=new THREE.PointLight(
+    "#ffd27b",
+    4,
+    10
+  );
+
+  light.position.set(
+    x,
+    3.3,
+    z
+  );
+
+  scene.add(light);
+
+  lamps.push(light);
+
+  const glow=new THREE.Mesh(
+    new THREE.SphereGeometry(.35,12,12),
+    new THREE.MeshBasicMaterial({
+      color:"#ffd27b"
+    })
+  );
+
+  glow.position.copy(light.position);
+
+  scene.add(glow);
+
+}
+
+lamp(-10,-13);
+lamp(10,-13);
+lamp(-13,7);
+lamp(13,7);
+lamp(-12,26);
+lamp(12,26);
+
+
+/* =========================================================
+   NPC
+========================================================= */
+
+const npcs=[];
+
+function createNPC(index){
+
+  const g=new THREE.Group();
+
+  const body=box(
+    .75,
+    1.25,
+    .5,
+    [
+      "#d56c5a",
+      "#5e83bd",
+      "#6fa65c",
+      "#a66fb0",
+      "#d69a43"
+    ][index%5],
+    0,
+    1.25,
+    0,
+    .18
+  );
+
+  const head=new THREE.Mesh(
+    new THREE.SphereGeometry(
+      .38,
+      14,
+      12
+    ),
+    mat("#e6ad7d")
+  );
+
+  head.position.y=2.25;
+
+  head.castShadow=true;
+
+  g.add(body);
+  g.add(head);
+
+  const hair=new THREE.Mesh(
+    new THREE.SphereGeometry(
+      .4,
+      12,
+      10
+    ),
+    mat(index%2 ? "#3a2924":"#171717")
+  );
+
+  hair.scale.set(
+    1,
+    .65,
+    1
+  );
+
+  hair.position.y=2.48;
+
+  g.add(hair);
+
+  const x=(Math.random()-.5)*30;
+  const z=(Math.random()-.5)*20;
+
+  g.position.set(
+    x,
+    0,
+    z
+  );
+
+  scene.add(g);
+
+  npcs.push({
+    object:g,
+    angle:Math.random()*Math.PI*2,
+    speed:.7+Math.random()*.5,
+    phase:Math.random()*10
+  });
+
+}
+
+for(let i=0;i<10;i++){
+  createNPC(i);
+}
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+const player=new THREE.Group();
+
+scene.add(player);
+
+const playerBody=box(
+  .85,
+  1.4,
+  .55,
+  "#5d88c5",
+  0,
+  1.3,
+  0,
+  .2
+);
+
+const playerHead=new THREE.Mesh(
+  new THREE.SphereGeometry(
+    .42,
+    16,
+    12
+  ),
+  mat("#f0b98d")
+);
+
+playerHead.position.y=2.45;
+
+player.add(playerBody);
+player.add(playerHead);
+
+player.position.set(
+  0,
+  0,
+  -17
+);
+
+
+/* =========================================================
+   JOYSTICK
+========================================================= */
+
+let joystick={
+  active:false,
+  x:0,
+  y:0
+};
+
+const joystickEl=document.getElementById("joystick");
+const stick=document.getElementById("stick");
+
+function updateStick(clientX,clientY){
+
+  const r=joystickEl.getBoundingClientRect();
+
+  const cx=r.left+r.width/2;
+  const cy=r.top+r.height/2;
+
+  let dx=clientX-cx;
+  let dy=clientY-cy;
+
+  const max=r.width/2-35;
+
+  const len=Math.hypot(dx,dy);
+
+  if(len>max){
+
+    dx=dx/len*max;
+    dy=dy/len*max;
+
+  }
+
+  stick.style.transform=
+    `translate(${dx}px,${dy}px)`;
+
+  joystick.x=dx/max;
+  joystick.y=dy/max;
+
+}
+
+joystickEl.addEventListener(
+  "pointerdown",
+  e=>{
+    joystick.active=true;
+    joystickEl.setPointerCapture(e.pointerId);
+    updateStick(e.clientX,e.clientY);
+  }
+);
+
+joystickEl.addEventListener(
+  "pointermove",
+  e=>{
+    if(joystick.active){
+      updateStick(e.clientX,e.clientY);
     }
-}
+  }
+);
 
-/* ================= ANIMATION ================= */
+joystickEl.addEventListener(
+  "pointerup",
+  ()=>{
+    joystick.active=false;
+    joystick.x=0;
+    joystick.y=0;
+    stick.style.transform="";
+  }
+);
 
-function animate(){
 
-    requestAnimationFrame(
-        animate
+/* =========================================================
+   PLAYER MOVEMENT
+========================================================= */
+
+const clock=new THREE.Clock();
+
+function updatePlayer(dt){
+
+  if(!joystick.active)return;
+
+  const speed=7;
+
+  const forward=new THREE.Vector3();
+  camera.getWorldDirection(forward);
+
+  forward.y=0;
+  forward.normalize();
+
+  const right=new THREE.Vector3();
+  right.crossVectors(
+    forward,
+    new THREE.Vector3(0,1,0)
+  ).normalize();
+
+  const move=new THREE.Vector3();
+
+  move.addScaledVector(
+    forward,
+    -joystick.y
+  );
+
+  move.addScaledVector(
+    right,
+    joystick.x
+  );
+
+  if(move.lengthSq()>.01){
+
+    move.normalize();
+
+    player.position.addScaledVector(
+      move,
+      speed*dt
     );
 
-    people.forEach(p=>{
+    player.position.x=
+      THREE.MathUtils.clamp(
+        player.position.x,
+        -32,
+        32
+      );
 
-        p.group.position.x +=
-            Math.cos(p.direction)
-            *p.speed;
+    player.position.z=
+      THREE.MathUtils.clamp(
+        player.position.z,
+        -30,
+        35
+      );
 
-        p.group.position.z +=
-            Math.sin(p.direction)
-            *p.speed;
+    player.rotation.y=
+      Math.atan2(
+        move.x,
+        move.z
+      );
 
-        if(
-            p.group.position.x>17 ||
-            p.group.position.x<-17 ||
-            p.group.position.z>12 ||
-            p.group.position.z<-13
-        ){
+  }
 
-            p.direction += Math.PI;
-        }
+}
+
+
+/* =========================================================
+   NPC MOVEMENT
+========================================================= */
+
+function updateNPC(dt,time){
+
+  npcs.forEach(n=>{
+
+    n.angle+=Math.sin(
+      time*.5+n.phase
+    )*.002;
+
+    const dx=Math.cos(n.angle)*n.speed*dt;
+    const dz=Math.sin(n.angle)*n.speed*dt;
+
+    n.object.position.x+=dx;
+    n.object.position.z+=dz;
+
+    if(Math.abs(n.object.position.x)>30)
+      n.angle=Math.PI-n.angle;
+
+    if(Math.abs(n.object.position.z)>30)
+      n.angle=-n.angle;
+
+    n.object.rotation.y=
+      Math.atan2(dx,dz);
+
+    n.object.position.y=
+      Math.sin(time*7+n.phase)*.025;
+
+  });
+
+}
+
+
+/* =========================================================
+   WATER ANIMATION
+========================================================= */
+
+function animateWater(time){
+
+  water.position.y=
+    .98+
+    Math.sin(time*2)*.025;
+
+}
+
+
+/* =========================================================
+   DAY / NIGHT
+========================================================= */
+
+let night=false;
+
+window.toggleNight=function(){
+
+  night=!night;
+
+  if(night){
+
+    scene.background.set("#101b36");
+
+    scene.fog.color.set("#101b36");
+
+    hemi.intensity=.35;
+
+    sun.intensity=.65;
+
+    nightLight.intensity=1.2;
+
+    lamps.forEach(l=>{
+      l.intensity=7;
     });
 
-    controls.update();
+    document.getElementById("dayIcon").textContent="☀️";
 
-    renderer.render(
-        scene,
-        camera
-    );
+    showToast("🌙 Đã chuyển sang ban đêm");
+
+  }else{
+
+    scene.background.set("#8ec6d8");
+
+    scene.fog.color.set("#8ec6d8");
+
+    hemi.intensity=2.1;
+
+    sun.intensity=4;
+
+    nightLight.intensity=0;
+
+    lamps.forEach(l=>{
+      l.intensity=4;
+    });
+
+    document.getElementById("dayIcon").textContent="🌙";
+
+    showToast("☀️ Đã chuyển sang ban ngày");
+
+  }
+
+};
+
+
+/* =========================================================
+   CAMERA MODE
+========================================================= */
+
+window.cameraMode=function(){
+
+  controls.autoRotate=!controls.autoRotate;
+  controls.autoRotateSpeed=.8;
+
+  showToast(
+    controls.autoRotate
+      ? "🎥 Camera tự xoay"
+      : "🎥 Camera tự xoay đã tắt"
+  );
+
+};
+
+
+/* =========================================================
+   GAME DATA
+========================================================= */
+
+let money=12580;
+let gems=245;
+let xp=320;
+let rating=4.8;
+
+function updateUI(){
+
+  document.getElementById("money").textContent=
+    money.toLocaleString("vi-VN");
+
+  document.getElementById("gems").textContent=
+    gems.toLocaleString("vi-VN");
+
+  document.getElementById("rating").textContent=
+    rating.toFixed(1);
+
+  document.getElementById("xpText").textContent=
+    `${xp}/600`;
+
+  document.getElementById("xpFill").style.width=
+    `${Math.min(xp/600*100,100)}%`;
+
 }
 
-/* ================= RESIZE ================= */
+updateUI();
 
-function resize(){
 
-    camera.aspect =
-        window.innerWidth/
-        window.innerHeight;
+/* =========================================================
+   PANELS
+========================================================= */
+
+const panelTitle=
+  document.getElementById("panelTitle");
+
+const panelContent=
+  document.getElementById("panelContent");
+
+const modal=
+  document.getElementById("modal");
+
+
+function card(icon,title,sub,button=""){
+
+  return `
+  <div class="card">
+
+    <div class="cardIcon">${icon}</div>
+
+    <div class="cardInfo">
+      <div class="cardTitle">${title}</div>
+      <div class="cardSub">${sub}</div>
+    </div>
+
+    ${button}
+
+  </div>
+  `;
+
+}
+
+
+window.openPanel=function(type){
+
+  modal.style.display="flex";
+
+  let title="";
+  let html="";
+
+  if(type==="hotel"){
+
+    title="🏨 Khách sạn";
+
+    html=
+      card("🏨","Mặt tiền khách sạn",
+        "Khách sạn 3 tầng · 12 phòng",
+        `<button class="action green"
+        onclick="earn(250)">Thu $250</button>`)+
+      card("⭐","Đánh giá",
+        "Khách đang rất hài lòng",
+        `<button class="action"
+        onclick="increaseRating()">+ Đánh giá</button>`)+
+      card("💰","Doanh thu hôm nay",
+        "$680",
+        `<button class="action"
+        onclick="earn(680)">Thu</button>`);
+
+  }
+
+  if(type==="rooms"){
+
+    title="🛏️ Phòng khách sạn";
+
+    html=
+      card("🛏️","Phòng 101",
+        "$120 / đêm · Trống",
+        `<button class="action green"
+        onclick="bookRoom()">Nhận khách</button>`)+
+      card("🛏️","Phòng 102",
+        "$120 / đêm · Trống",
+        `<button class="action green"
+        onclick="bookRoom()">Nhận khách</button>`)+
+      card("🛏️","Phòng Deluxe",
+        "$180 / đêm · Trống",
+        `<button class="action green"
+        onclick="bookRoom()">Nhận khách</button>`)+
+      card("🛏️","Phòng VIP",
+        "$250 / đêm · Trống",
+        `<button class="action"
+        onclick="bookRoom()">VIP</button>`);
+
+  }
+
+  if(type==="restaurant"){
+
+    title="🍽️ Nhà hàng";
+
+    html=
+      card("🍜","Buffet sáng",
+        "Phục vụ 28 khách",
+        `<button class="action"
+        onclick="earn(180)">Thu $180</button>`)+
+      card("🍲","Bữa trưa",
+        "Doanh thu dự kiến $320",
+        `<button class="action"
+        onclick="earn(320)">Thu</button>`)+
+      card("🥤","Đồ uống",
+        "Nước ép · cà phê · cocktail",
+        `<button class="action"
+        onclick="earn(90)">Thu</button>`);
+
+  }
+
+  if(type==="pool"){
+
+    title="🏊 Hồ bơi";
+
+    html=
+      card("🏊","Hồ bơi cao cấp",
+        "18 khách đang sử dụng",
+        `<button class="action"
+        onclick="earn(420)">Thu $420</button>`)+
+      card("🛟","Quầy bar",
+        "Doanh thu $80",
+        `<button class="action"
+        onclick="earn(80)">Thu</button>`)+
+      card("☂️","Ghế nằm",
+        "Đã nâng cấp",
+        `<button class="action green"
+        onclick="showToast('Đã sẵn sàng!')">OK</button>`);
+
+  }
+
+  if(type==="staff"){
+
+    title="👨‍💼 Nhân viên";
+
+    html=
+      card("🧹","Dọn phòng",
+        "Lv. 2 · $120/ngày",
+        `<button class="action"
+        onclick="hire()">Thuê</button>`)+
+      card("👨‍🍳","Đầu bếp",
+        "Lv. 2 · $130/ngày",
+        `<button class="action"
+        onclick="hire()">Thuê</button>`)+
+      card("🛎️","Lễ tân",
+        "Lv. 3 · $150/ngày",
+        `<button class="action"
+        onclick="hire()">Thuê</button>`)+
+      card("👮","Bảo vệ",
+        "Lv. 1 · $100/ngày",
+        `<button class="action"
+        onclick="hire()">Thuê</button>`);
+
+  }
+
+  if(type==="upgrade"){
+
+    title="✏️ Đổi tên khách sạn";
+
+    html=`
+
+      <div class="card" style="display:block">
+
+        <div class="cardTitle">
+          Tên khách sạn mới
+        </div>
+
+        <div class="renameBox" style="margin-top:12px">
+
+          <input
+            id="newHotelName"
+            value="${hotelNameUI.textContent}"
+            maxlength="28"
+          >
+
+          <button
+            class="action"
+            onclick="renameHotel()">
+            Lưu
+          </button>
+
+        </div>
+
+      </div>
+
+      ${card("🏨","Nâng cấp mặt tiền",
+        "Tăng sức chứa và điểm đánh giá",
+        `<button class="action"
+        onclick="upgrade(5000)">💵 5,000</button>`)}
+
+      ${card("🍽️","Nâng cấp nhà hàng",
+        "Tăng doanh thu nhà hàng",
+        `<button class="action"
+        onclick="upgrade(3000)">💵 3,000</button>`)}
+
+      ${card("🏊","Nâng cấp hồ bơi",
+        "Tăng trải nghiệm khách",
+        `<button class="action"
+        onclick="upgrade(4000)">💵 4,000</button>`)}
+
+    `;
+
+  }
+
+  if(type==="mission"){
+
+    title="📋 Nhiệm vụ";
+
+    html=
+      card("🛏️","Nhận 3 khách",
+        "Phần thưởng: 500 XP",
+        `<button class="action"
+        onclick="completeMission()">Nhận</button>`)+
+      card("🏊","Thu doanh thu hồ bơi",
+        "Phần thưởng: $300",
+        `<button class="action"
+        onclick="earn(300)">Nhận</button>`)+
+      card("🍽️","Phục vụ 10 khách",
+        "Phần thưởng: 💎 10",
+        `<button class="action"
+        onclick="rewardGems()">Nhận</button>`);
+
+  }
+
+  if(type==="gift"){
+
+    title="🎁 Quà";
+
+    html=
+      card("🎁","Quà đăng nhập",
+        "Phần thưởng hôm nay",
+        `<button class="action"
+        onclick="claimGift()">Mở</button>`)+
+      card("💎","Hộp kim cương",
+        "Có thể mở miễn phí",
+        `<button class="action"
+        onclick="rewardGems()">Mở</button>`);
+
+  }
+
+  if(type==="vip"){
+
+    title="👑 VIP";
+
+    html=
+      card("👑","VIP Hotel",
+        "Tăng doanh thu 20%",
+        `<button class="action"
+        onclick="showToast('VIP đang hoạt động!')">Đang dùng</button>`)+
+      card("💎","Quà VIP",
+        "100 kim cương",
+        `<button class="action"
+        onclick="rewardGems(100)">Nhận</button>`);
+
+  }
+
+  if(type==="map"){
+
+    title="🗺️ Bản đồ";
+
+    html=
+      card("🏨","Khách sạn chính",
+        "Bạn đang ở đây",
+        `<button class="action green"
+        onclick="closePanel()">Đến</button>`)+
+      card("🏖️","Khu hồ bơi",
+        "Cách 20m",
+        `<button class="action"
+        onclick="closePanel()">Đến</button>`)+
+      card("🍽️","Nhà hàng",
+        "Cách 25m",
+        `<button class="action"
+        onclick="closePanel()">Đến</button>`);
+
+  }
+
+  panelTitle.textContent=title;
+  panelContent.innerHTML=html;
+
+};
+
+
+window.closePanel=function(){
+
+  modal.style.display="none";
+
+};
+
+
+modal.addEventListener(
+  "pointerdown",
+  e=>{
+    if(e.target===modal)
+      closePanel();
+  }
+);
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+window.earn=function(amount){
+
+  money+=amount;
+  xp+=Math.floor(amount/10);
+
+  if(xp>=600){
+    xp-=600;
+    showToast("🎉 Lên cấp!");
+  }else{
+    showToast(`💵 +$${amount}`);
+  }
+
+  updateUI();
+
+};
+
+
+window.increaseRating=function(){
+
+  rating=Math.min(
+    5,
+    rating+.1
+  );
+
+  xp+=20;
+
+  updateUI();
+
+  showToast("⭐ Đánh giá khách sạn tăng!");
+
+};
+
+
+window.bookRoom=function(){
+
+  money+=120;
+  xp+=40;
+
+  updateUI();
+
+  showToast(
+    "🧳 Đã nhận khách +$120"
+  );
+
+};
+
+
+window.hire=function(){
+
+  if(money<500){
+
+    showToast("💵 Không đủ tiền");
+
+    return;
+
+  }
+
+  money-=500;
+
+  updateUI();
+
+  showToast("👨‍💼 Đã thuê nhân viên");
+
+};
+
+
+window.upgrade=function(cost){
+
+  if(money<cost){
+
+    showToast("💵 Không đủ tiền nâng cấp");
+
+    return;
+
+  }
+
+  money-=cost;
+  xp+=100;
+
+  updateUI();
+
+  showToast("⬆️ Nâng cấp thành công!");
+
+};
+
+
+window.renameHotel=function(){
+
+  const input=
+    document.getElementById("newHotelName");
+
+  const name=
+    input.value.trim();
+
+  if(!name){
+
+    showToast("Hãy nhập tên khách sạn");
+
+    return;
+
+  }
+
+  document.getElementById(
+    "hotelNameUI"
+  ).textContent=name;
+
+  closePanel();
+
+  showToast("🏨 Đã đổi tên khách sạn");
+
+};
+
+
+window.claimGift=function(){
+
+  money+=500;
+  gems+=10;
+
+  updateUI();
+
+  showToast(
+    "🎁 +$500 · 💎 +10"
+  );
+
+};
+
+
+window.rewardGems=function(amount=10){
+
+  gems+=amount;
+
+  updateUI();
+
+  showToast(
+    `💎 +${amount} kim cương`
+  );
+
+};
+
+
+window.completeMission=function(){
+
+  xp+=500;
+
+  if(xp>=600){
+    xp-=600;
+  }
+
+  updateUI();
+
+  showToast(
+    "📋 Hoàn thành nhiệm vụ +500 XP"
+  );
+
+};
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+window.showToast=function(text){
+
+  const toast=
+    document.getElementById("toast");
+
+  toast.textContent=text;
+
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer=setTimeout(()=>{
+    toast.classList.remove("show");
+  },2200);
+
+};
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+  "resize",
+  ()=>{
+
+    camera.aspect=
+      window.innerWidth/
+      window.innerHeight;
 
     camera.updateProjectionMatrix();
 
     renderer.setSize(
-        window.innerWidth,
-        window.innerHeight
+      window.innerWidth,
+      window.innerHeight
     );
+
+  }
+);
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+setTimeout(()=>{
+
+  document.getElementById(
+    "loading"
+  ).style.opacity="0";
+
+  document.getElementById(
+    "loading"
+  ).style.pointerEvents="none";
+
+  setTimeout(()=>{
+    document.getElementById(
+      "loading"
+    ).remove();
+  },500);
+
+},2100);
+
+
+/* =========================================================
+   MAIN LOOP
+========================================================= */
+
+function animate(){
+
+  requestAnimationFrame(animate);
+
+  const dt=Math.min(
+    clock.getDelta(),
+    .05
+  );
+
+  const time=performance.now()/1000;
+
+  updatePlayer(dt);
+
+  updateNPC(dt,time);
+
+  animateWater(time);
+
+  controls.update();
+
+  renderer.render(
+    scene,
+    camera
+  );
+
 }
 
-</script>
-
-<script>
-
-/* ================= UI ================= */
-
-function openPanel(id){
-
-    closePanels();
-
-    const el =
-        document.getElementById(id);
-
-    if(el){
-        el.classList.add("show");
-    }
-}
-
-function closePanels(){
-
-    document
-        .querySelectorAll(".panel")
-        .forEach(
-            p=>p.classList.remove("show")
-        );
-}
-
-function showToast(text){
-
-    const toast =
-        document.getElementById("toast");
-
-    toast.textContent=text;
-
-    toast.classList.add("show");
-
-    setTimeout(()=>{
-        toast.classList.remove("show");
-    },2200);
-}
+animate();
 
 </script>
 
